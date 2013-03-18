@@ -1,0 +1,21 @@
+\name{hide_species_js}
+\alias{hide_species_js}
+\title{Javascript code to hide html elements}
+\usage{
+  hide_species_js(conf_data)
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  javascript call as character string
+}
+\description{
+  Javascript code to hide html elements for all but the
+  first species listed in the configuration file
+}
+\author{
+  Thomas Sandmann
+}
+

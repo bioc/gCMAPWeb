@@ -1,0 +1,25 @@
+\name{entrez_GeneSets}
+\alias{entrez_GeneSets}
+\title{GeneSet Entrez mapper}
+\usage{
+  entrez_GeneSets(gs)
+}
+\arguments{
+  \item{gs}{GeneSet or SignedGeneSet}
+}
+\value{
+  GeneSet or SignedGeneSet
+}
+\description{
+  This function maps the gene identifiers of a GeneSet
+  object to Entrez identifiers and returns an error if none
+  of them could be found.
+}
+\details{
+  gCMAPWeb uses this function to ensure that all submitted
+  / retrieved Entrez Ids are valid.
+}
+\author{
+  Thomas Sandmann
+}
+

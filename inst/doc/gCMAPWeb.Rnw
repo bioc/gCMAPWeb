@@ -1,0 +1,477 @@
+% \VignetteIndexEntry{main}
+% \VignetteDepends{}
+% \VignetteKeywords{gCMAPWeb}
+% \VignettePackage{gCMAPWeb}
+
+\documentclass[10pt]{article}
+
+\usepackage{times}
+\usepackage[square,numbers]{natbib}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{Sweave}
+\usepackage{subfigure}
+\usepackage{underscore}
+\usepackage{hyperref}
+\usepackage[section]{placeins}
+\textwidth=6.2in
+\textheight=8.5in
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+
+
+\title{gCMAPWeb : a web interface for gene-set enrichment analysis }
+\author{Thomas Sandmann}
+\date{\today}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\input{gCMAPWeb-concordance}
+
+\maketitle
+\tableofcontents
+\newpage
+
+%%%%%
+\section{Introduction}
+%%%%%
+
+The \Rpackage{gCMAPWeb} package provides a graphical user interface for the\Rpackage{gCMAP} package, offering users a simple and comfortable way to compare gene sets or differential gene expression profiles to reference datasets through their web browser.
+
+Leveraging the \Rpackage{Rook} package, \Rpackage{gCMAPWeb} can directly use R's built-in webserver to provide a single-user interface. Alternatively, \Rpackage{gCMAPWeb} can be registered with an apache webserver through the rApache module, offering a production-quality, multi-user application.
+
+This vignette provides a step-by-step demonstration of
+\begin{itemize}
+  \item{ the different types of analyses supported by \Rpackage{gCMAPWeb}}
+  \item{ its configuration and customization}
+  \item{ the deployment of \Rpackage{gCMAPWeb} instances through an apache webserver}
+\end{itemize}
+
+%%%%%
+\section{Quickstart}
+%%%%%
+
+To start \Rpackage{gCMAPWeb} on the local machine, start R, load the \Rpackage{gCMAPWeb} library and simply type \Rcode{gCMAPWeb()}.
+
+\begin{Schunk}
+\begin{Sinput}
+> library( gCMAPWeb )
+> gCMAPWeb()
+\end{Sinput}
+\end{Schunk}
+
+Your web browser will open the gCMAPWeb index page, prompting you to choose one of the tree supported query types. This \Rpackage{gCMAPWeb} instance is populated with small, simulated datasets, allowing you to get a first glimpse of the input / output of the \Rpackage{gCMAPWeb} package.
+
+Many elements on the index.rhtml page can be configured through global options. Please refer to section "Customizing the gCMAPWeb web interface" for details.
+
+%%%%%
+\section{Submitting gene sets and profiles}
+%%%%%
+
+\Rpackage{gCMAPWeb} supports three different types of queries:
+
+\subsection*{Directional queries}
+\textbf{\textit{A list with two components, identifying up- and down-regulated genes.}}
+\newline
+
+For this query, up- and down-regulated gene sets are submitted separately, allowing gCMAPWeb to retrieve experiments in which the query genes changed expression in a consistent fashion, e.g. in the same (correlated) or opposite (anti-correlated) directions as your query. To identify reference experiments with significantly similar expression changes, gCMAPWeb calculates the JG score and obtains a parametric p-value based on a normal distribution. P-values are converted into local false-discovery rates using Benjamini Hochberg's multiple-testing adjustment method. 
+
+This query type should also be used if only either up- or down-regulated genes are known, by submitting only one of the two gene sets. Also, this query is the right choice if the set is expected to show consistent but unknown behavior. gCMAPWeb will retrieve reference datasets showing correlated and anti-correlated or results.
+  
+\subsection*{Non-directional queries}
+\textbf{\textit{A single list of gene identifiers, potentially including both up- and down-regulated members.}}
+\newline
+
+This query is recommended if the query genes are expected to show mixed differential expression, e.g. that some members will be up- and others down-regulated. Using Fisher's exact test, \Rpackage{gCMAPWeb} will retrieve all experiments, in which a significant fraction of your genes of interest showed differential expression either way. P-values are converted into local false-discovery rates using Benjamini Hochberg's multiple-testing adjustment method. 
+
+\subsection*{Profile queries}
+\textbf{\textit{a vector of differential expression scores (e.g. z-scores, assumed to be normally distributed) for all assayed genes, e.g. the complete results of a two-class differential expression analysis.}}
+\newline
+
+If you the complete set of differential expression scores (e.g. z-scores) from a global differential gene expression analysis, a profile query can be performed. Technically, a profile query is the reverse of a directional query: in the former, you provide the global differential gene expression scores and \Rpackage{gCMAPWeb} matches them to the gene identifiers in the reference database. In the latter, you provide a list of gene identifiers and \Rpackage{gCMAPWeb} retrieves the differential expression scores these genes received in other experiments from its reference database. As for the directional query type, \Rpackage{gCMAPWeb} calculates the JG score and derives parametric p-values using a normal distribution. For this procedure to be valid, the submitted scores should be approximately normally distributed.
+
+For this query, two pieces of information need to be submitted for every gene:
+
+\begin{itemize}
+  \item{a gene identifier}
+  \item{the associated differential gene expression score for this gene}
+\end{itemize}
+
+\subsection*{Selecting reference datasets}
+
+Users can select either a single or multiple reference datasets from the same species for analysis. Internally, each set will be processed separately and p-value correction is applied within each reference dataset.
+
+For more information on the elements in the user interface, please consult the help.html file available through the "Help" menu item on the gCMAPWeb index page.
+
+%%%%%
+\section{Understanding gCMAPWeb results}
+%%%%%
+
+Once you submitted your query, the gCMAP tool will search all selected databases for significantly similar experiments. The first result page will present a list of the most significant reference datasets matching your query (if any). A separate panel with results will be generated with results for each searched reference database.
+
+\subsection*{Gene set reports}
+
+\begin{figure}[thb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../extdata/setLevelPlot.png}
+   \caption{Example of a \textbf{gene-set score} density plot, as found on the main gCMAPWeb result page. The grey density plot summarizes the scores for all experiments in this reference dataset - similar or not. For reference, the normal distribution is shown as a dashed line. Reference instances with similarity scores \textgreater 3 (correlated experiments) or \textless -3 (anti-correlated experiments) are indicated in the rug plot. On the right, the same similarity scores are shown as an ordered heatmap. High scores are shown at the top (green) and low scores at the bottom (blue). }
+  \label{fig:setLevelPlot}
+\end{figure}
+
+The main \Rpackage{gCMAPWeb} result page presents information about the detected similar experiments (not individual genes). At the top of the page, a density plot provides a high-level overview ( Figure ~\ref{fig:setLevelPlot}). Reference instances with similarity scores \textgreater 3 or \textless -3 are highlighted as green and blue dashes at the bottom of the plot and in the heatmap on the right.
+
+In this example, only few experiments received high scores (green), indicating expression changes in the same direction as in the query, but a large number of experiments showed consistent changes of the query genes in the opposite direction (blue) than specified in the query.
+
+\subsection*{Gene-level reports}
+
+\begin{figure}[thb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../extdata/geneLevelPlot.png}
+   \caption{Example of a \textbf{gene score} density plot. The grey density plot summarizes the scores for all genes assayed in this reference dataset. For reference, the normal distribution is shown as a dashed line. The distribution of query genes submitted as "up-regulated" is shown in green, that of "down-regulated" query genes is shown in blue. (For non-directional queries, a single query gene density is shown in black.) Query gene scores are also indicated in the rug plot following the same color scheme as outlined above.
+   In this example, an \textbf{anti-correlated result} is shown: query genes submitted as "up-regulated" (green) are shifted toward negative scores, while "down-regulated" query genes are shifted to positive scores.}
+   \label{fig:geneLevelPlot}
+\end{figure}
+
+For each reported gene set, \Rpackage{gCMAPWeb} generates a separate html page with detailed results for individual query genes. (If you submitted a complete profile, you will be presented with the scores for the those genes significantly changing in similar experiments.) 
+
+Gene-level results are linked via the nFound column in the main result table. For directional queries, the gene-level report will display the distribution of scores in a density plot.
+
+While the density plot on the main result page displayed the similiarity scores for each reference dataset, summarizing a potentially large number of genes, this plot shows the differential gene expression scores of individual (query) genes ( Figure ~\ref{fig:geneLevelPlot}). 
+
+For more information about the elements presented in the \Rpackage{gCMAPWeb} output, please consult the help.html file available through the "Help" menu item on the \Rpackage{gCMAPWeb} index page for additional examples for all query types.
+
+%%%%%
+\section{Configuration}
+%%%%%
+
+This section will take you through the steps necessary to search your own datasets with \Rpackage{gCMAPWeb}.
+
+%%%%%
+\subsection*{Reference datasets}
+%%%%%
+
+\Rpackage{gCMAPWeb} can query either quantitative differential expression data, e.g. z-scores, stored in \Robject{NChannelSet} objects, or gene-set collections provided as \Robject{CMAPCollection} objects. To avoid reading large datasets fully in to memory, \Rpackage{gCMAPWeb} can take advantage of the \Rpackage{bigmemory} package to retrieve only the required data from a binary file stored on disk.
+
+All reference datasets must be provided with \textbf{Entrez gene identifiers}. 
+If available, information from the \tt abstract \rm, \tt title \rm slots will be used for labels and pop-over help on the submission page (see figure ~\ref{fig:esetSlots}). 
+
+For example, please take a look at the \tt cmap1 \rm \Robject{NChannelSet} and the \tt cmap5 \rm \Robject{CMAPCollection} objects provided with the package. 
+
+<<>>=
+library(gCMAPWeb)
+data( "cmap1" )
+cmap1
+experimentData( cmap1 )@title
+abstract( cmap1 )
+
+data( "cmap5" )
+cmap5
+@
+
+By default, \Robject{NChannelSet} reference objects are made available for all three query types, unsigned, directional and profile. \Robject{CMAPCollections}, on the other hand, only provide gene set membership information. If gene-signs are included in the \Robject{CMAPCollection}, indicating whether genes are expected to be up- or down-regulated, the reference dataset is made available for non-directional (unsigned) and profile queries. If the CMAPCollection contains (any) unsigned gene sets, the reference dataset can only be selected for non-directional queries. To manually include or exclude reference datasets from specific query types, a character vector with the supported query types (unsigned, directional, profile ) can be specified by specifying \tt \verb+experimentData@other$supported.query+ \rm in the \Robject{NChannelSet} or \Robject{CMAPCollection}.
+
+To hide the cmap1 reference dataset on the profile submission page, simply include information about the supported query type(s) in the \tt experimentData \rm slot
+
+<<>>=
+cmap1@experimentData@other$supported.query <- c("unsigned", "directional")
+@
+
+By default, all of the sample annotations available in the \tt phenoData \rm slot of the reference dataset will be included in the table of significantly similar reference experiments. To exclude non-informative columns, an additional \tt include \rm column can be included as an additional \tt varMetdata \rm column, indicating for each \tt phenoData \rm column whether is it should be included in the result table or not.
+
+For example, the following commands prevents cmap1's "Date" column from the being displayed.
+
+<<>>=
+head( pData( cmap1 ), n=3)
+varMetadata( cmap1 )
+varMetadata( cmap1 )$include <- c(TRUE, TRUE, FALSE)
+varMetadata( cmap1 )
+@
+
+Reference datasets are specified by providing the full path to the corresponding Rdata file in the configuration file. (Please note that each Rdata file should only contain a single eSet.)
+
+%%%%%
+\subsection*{Essential information : the configuration file}
+%%%%%
+
+\Rpackage{gCMAPWeb's} configuration file is in \Robject{YAML} format provides details on the reference datasets to be included in gCMAPWeb in the form of a nested list. It includes  e.g. the path to the RData file and the name of the associated annotation package.
+
+Here is a simple example of a configuration for a \Rpackage{gCMAPWeb} instance supporting only human gene queries:
+
+\begin{verbatim}
+species:
+  human:
+    annotation: org.Hs.eg
+    platforms:
+     - hgug4100a
+     - hgug4110b
+    cmaps:
+      reference1: /home/data/ref1.rdata
+      reference2: /home/data/ref2.rdata
+\end{verbatim}
+
+In this example
+
+\begin{itemize}
+  \item{species: }{contains only one supported species, human.}
+
+  \item{annotation: }{specifies that mappings between gene identifiers are retrieved from Bioconductor's \tt org.Hs.eg \rm annotation package. \Rpackage{gCMAPWeb} automatically loads the specified annotation packages, so they must be installed on the user's system.}
+
+  \item{platforms: }{specifies two microarrays (hgug4100a, hgug4110b). Users submitting queries with "probe" as identifier type will be prompted to choose one of these two supported platforms. \Rpackage{gCMAPWeb} automatically loads the specified annotation packages, so they must be installed on the user's system.}
+
+  \item{cmaps: }{contains the full path to the reference datasets for this species. Each path must be preceded by a unique identifier (e.g. reference.1). As this identifier is used as an object name both in R and javascript, it must be a single alpha-numeric single string and must not contain spaces, hyphens, dots, etc. This identifier is only displayed on the submission page if the eSet does not have a title.}
+\end{itemize}
+
+Additional species can be added by duplicating the \tt species \rm block of the configuration and modifying the respective fields. (See default configuration file for an example with two species.)
+
+When \Rpackage{gCMAPWeb} is invoked without additional parameters, the default configuration file in the \tt config \rm directory of the \Rpackage{gCMAPWeb} package is read. You can obtain the full path to the default configuration file on your system with the following command:
+
+\begin{Schunk}
+\begin{Sinput}
+> system.file("config", "config.yml", package = "gCMAPWeb")
+\end{Sinput}
+\end{Schunk}
+
+To read your own, customized configuration file instead, provide its path via the \tt config.file.path \rm parameter.
+
+\begin{Schunk}
+\begin{Sinput}
+> gCMAPWeb( config.file.path = "/path/to/your/config_file.yml")
+\end{Sinput}
+\end{Schunk}
+
+%%%%%
+\subsection*{Additional information : eSet slots}
+%%%%%
+
+The configuration file provides all required information to start a \Rpackage{gCMAPWeb} instance. To fine-tune the information displayed about each reference dataset, three different settings can be customized on the object level using the default slots of eSet objects.
+
+\begin{figure}[thb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../extdata/esetSlots.png}
+   \caption{Reference dataset information}
+   \label{fig:esetSlots}
+\end{figure}
+
+If present, three different slots are used by \Rpackage{gCMAPWeb} (see figure ~\ref{fig:esetSlots}):
+
+\begin{itemize}
+  \item{abstract: }{Text in the abstract slots will be displayed as pop-up information upon mouse-over. If no abstract is provided, generic information about the number of experiments in the dataset is displayed instead.}
+  \item{title: }{The eSet title will be used as the reference database name displayed on the submission page. If not title is provided, the unique identifier specified for this dataset in the configuration file is used instead.}
+  \item{other\$supported.query: }{Defines for which query type this dataset should be made available, one or more of "directional", "unsigned" and /or "profile". If no other\$supported.query information is provided, the class of the reference dataset evaluated instead with the following defaults:}
+\begin{itemize}
+    \item{NChannelSet: }{available for all three query types}
+    \item{CMAPCollection, unsigned}{available for non-directional/unsigned queries only}
+    \item{CMAPCollection, signed}{available for non-directional/unsigned and profile queries}
+  \end{itemize}
+\end{itemize}
+
+%%%%%
+\section{Customizing the gCMAPWeb web interface}
+%%%%%
+
+Many elements of the user interface and parameters of the gCMAPWeb search methods can be set through global parameters. These can either be called before executing the \tt gCMAPWeb() \rm function for local instances or be included in the start-up script executed by the rApache server (see below).
+
+\subsection*{Navigation bar}
+
+Please note that text elements displayed on the html page(s) are intepreted as html code.
+
+\begin{itemize}
+  \item{site.title}{ Brand shown on the upper left of the menu bar}
+  \item{home.url}{ URL linked to brand item in the menu bar}
+  \item{doc.url}{ URL linked to "Help" item in the menu bar}
+  \item{feedback.url}{ URL linked to "Feedback" item in the menu bar}
+  \item{contact.email}{ URL linked to "Contact" item in the menu bar}
+  \item{name.out}{ additional element on the far right of the menu bar}
+  \item{link.out}{ URL linked to "name.out" item in the menu bar}
+\end{itemize}
+
+\subsection*{Processing options}
+\begin{itemize}
+  \item{save.intermediates}{ Logical, should intermediate files be saved (for debugging). Default: TRUE}
+  \item{element}{ AssayDataElementName of the assayData slot with differential expression scores to retrieve from \Robject{NChannelSet} reference datasets. Default: "z"}
+  \item{min.set.size}{ Minimum number of elements a reference gene set must contain to be searched. (Note: not to be confused with option min.found, the minimum number of overlap between query and reference sets ) Default: 5}
+  \item{max.set.size}{ Maximum number of elements a reference gene set may contain to be searched. (Note: only applies to non-directional and profile queries ) Default: Inf}
+  \item{lower.threshold}{ Lower score threshold applied to reference datasets or profile queries to identify signficantly down-regulated genes. Default=-3}
+  \item{higher.threshold}{ Lower score threshold applied to reference datasets or profile queries to identify signficantly up-regulated genes. Default= 3}
+  \item{induce.from.element}{ AssayDataElementName of the assayData slot with differential expression scores to threshold when gene sets are induced from \Robject{NChannelSet} reference datasets. Default: "z"} 
+  \item{cmaps.concatenated.by}{ Character string used to concatenate multiple requested reference dataset names in the html POST request . Default: ","} 
+  \item{max.results}{ Maximum number of similar reference datasets to return with FDR < option max.padj. As gene-level pages are created for each significant set, increasing this number can lead to increased processing time. Default: "50"} 
+  \item{min.found}{ Minimum number of query genes found in a reference gene set for it to be included in the result table. Default: "1"} 
+   \item{max.padj}{ Maximum adjusted p-value / FDR for a gene set to be included in the result table. Default: 0.1} 
+\end{itemize}
+
+\subsection*{Output options}
+\begin{itemize}
+  \item{gene.level.report}{ Logical, should sub-pages be created for each  of the top max.results significant gene sets ? Default=TRUE}
+  \item{gene.level.plot}{ Logical, should gene-level pages include a plot of score distributions ? Default=TRUE}
+  \item{show.heatmap}{ Logical, should gene-level scores (if available) be displayed in a heatmap on the main result page ? Default=TRUE}
+  \item{excluded.cols}{ Character vector with columns to exclude from a CMAPResults object when the html output is created. Default=c("geneScores", "signed", "pval", "UID", "z.shift", "log_fc.shift", "mod_fc.shift")}
+  \item{swap.colnames}{ List of column names to rename when the html output is created. Default=list(padj="FDR", nFound="Genes")}
+  \item{table.javascript}{ Logica, should the dataTable javascript module be used to render the output html tabels ? Default=TRUE}
+\end{itemize}
+
+show.heatmap
+
+\subsection*{Index page}
+
+\begin{figure}[thb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../extdata/indexOptions.png}
+   \caption{Options available to customize the index page}
+   \label{fig:indexOptions}
+\end{figure}
+
+The following options are available to customize the index html page (see figure figure ~\ref{fig:indexOptions} for a graphical overview). Please note that text elements displayed on the html page(s) are intepreted as html code.
+
+\begin{itemize}
+  \item{index.main}{ Main title shown on the index page. Default="gConnectivity Map"}
+  \item{index.sub}{ Subtitle shown on the index page. Default="a search engine for differential gene expression profiles."}
+  \item{index.text}{ Text shown on the the index page. Default="Compare your favorite genes to a reference database of differential expression experiments"}
+  \item{index.message}{ Text shown in a box highlighed in green on the the index page. Default=NULL}
+  \item{index.quote}{ Text shown as quote on the the index page.}
+  \item{supported.inputType}{ They query type(s) offered. Default: c("single", "non-directional", "directional", "profile")}
+  \item{supported.idType}{ The supported gene identfier types. Default: c("symbol", "entrez", "probe")}
+\end{itemize}
+
+\subsection*{Examples}
+
+The following options specify which gene identifiers are pasted into the submission boxes when the "Example query" button is pressed. 
+
+\begin{figure}[thb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../extdata/exampleQuery.png}
+   \caption{Options populating the Example query button on the directional query submission page.}
+   \label{fig:exampleQuery}
+\end{figure}
+
+The following options are available to customize the index html page (see figure figure ~\ref{fig:exampleQuery} for a screenshot of the directional query submission page with relevant options).
+
+\begin{itemize}
+  \item{single.gene.example}{ Example input for a single gene lookup.}
+  \item{single.gene.example.popover}{ Text to be displayed in the pop-over element for the Example query button for singel gene lookups.}
+  \item{signed.input.example.down}{ Example query for down-regulated genes in a directional query}
+  \item{signed.input.example.up}{ Example query for up-regulated genes in a directional query}
+  \item{signed.input.example.popover}{ Text to be displayed in the pop-over element for the Example query button for signed queries.}
+  \item{unsigned.input.example}{ Example query for a non-directional query}
+  \item{unsigned.input.example.popover}{ Text to be displayed in the pop-over element for the Example query button for unsigned queries.}
+  \item{profile.input.example}{ Example gene identifier / score pairs for a non-directional query. Newlines have to be included as \verb+\\n+ strings between consecutive id-score pairs.}
+  \item{profile.input.example.popover}{ Text to be displayed in the pop-over element for the Example query button for profile queries.}
+\end{itemize}
+
+\subsection*{Figure legends}
+
+\begin{itemize}
+  \item{gene.profile.legend}{ Legend for the density plot on the main result page for profile queries}
+ \item{gene.set.legend}{ Legend for the density plot on the main result page for directional and non-directional queries}
+ \item{heatmap.legend}{ Legend for the heatmap plot on the main result page for directional and non-directional queries}
+  \item{gene.density.legend}{ Legend for the density plot on gene-level report pages}
+  \item{gene.pie.legend}{ Legend for the pie charts on gene-level report pages}
+\end{itemize}
+
+For example, the main title of the gCMAPWeb index page can be retrieved and set using the \tt site.title \rm option.
+
+\begin{Schunk}
+\begin{Sinput}
+> getOption( "site.title", default="gCMAP")
+> options( site.title="New site title")
+\end{Sinput}
+\end{Schunk}
+
+
+%%%%%
+\section{Deploying \Rpackage{gCMAPWeb} through rApache}
+%%%%%
+
+To run \Rpackage{gCMAPWeb} in a multi-user environment, the application can be deployed through \href{http://rapache.net/}{rApache}. For installation and configuration options of \href{http://httpd.apache.org/}{Apache} and \href{http://rapache.net/}{rApache}, please consult the respective project pages. The following instructions assume that you have access to the Apache installation directory, especially the \tt httpd.conf \rm file.
+
+Once a working webserver is available, the following steps are required to deploy \Rpackage{gCMAPWeb}:
+
+\begin{enumerate}
+  \item{ Locate the the  \tt htdocs \rm directory within the \Rpackage{gCMAPWeb} installation directory on your system and copy its contents (including all subdirectories) into the htdocs directory of your Apache installation. You can retrieve the location of \Rpackage{gCMAPWeb's} htdocs directory by issuing the following commands in your R console:}
+\end{enumerate}
+
+\begin{Schunk}
+\begin{Sinput}
+> library( gCMAPWeb )
+> system.file("htdocs", package="gCMAPWeb")
+\end{Sinput}
+\end{Schunk}
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+  \item{ Locate the \tt gCMAP_app.R \rm, \tt rapache_config.R \rm and \tt config.yml \rm files in \Rpackage{gCMAPWeb's} installation directory and copy them to a location accessible to the Apache server.}
+\end{enumerate}
+
+\begin{Schunk}
+\begin{Sinput}
+> system.file("config", "rapache", "gCMAP_app.R", package="gCMAPWeb")
+> system.file("config", "rapache", "rapache_config.R", package="gCMAPWeb")
+> system.file("config", "config.yml", package="gCMAPWeb")
+\end{Sinput}
+\end{Schunk}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+  \item{ Edit the new copy of the \tt gCMAP_app.R text file with a text editor of your choice and change the 'root.url' variable (first line) to point toward the location of your Apache htdocs directory. }
+\end{enumerate}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+  \item{ Edit the new copy of the \tt rapache_config.R \rm text file with a text editor of your choice and change the \tt config.file.path \rm variable to point toward the location of your copy of the \tt config.yml \rm file. The the \tt rapache_config.R \rm is executed upon startup for each R session by the Apache web server. Use the \tt options \rm command to set any global options to fine-tune the look and behavior of \Rpackage{gCMAPWeb}}
+\end{enumerate}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+  \item{ Open the \tt httpd.conf \rm of your Apache webserver and ensure that rApache has been installed correctly, e.g. by testing that the \tt r-info \rm test application is accessible, as described in the \href{http://rapache.net/manual.html}{rApache manual}.
+  }
+  \item{ Add or modify the \tt REvalOnstartup \rm and \tt RSourceOnStartup \rm command lines to include the following lines (replace \tt PATH_TO_YOUR \rm with the path to your \tt rapache_config.R \rm file):
+  
+\begin{verbatim}  REvalOnStartup "library(gCMAPWeb)"                                                                   
+  RSourceOnStartup "PATH_TO_YOUR/rapache_config.R"
+\end{verbatim}  
+  
+  These lines will instruct Apache to load the \Rpackage{gCMAPWeb} package upon starting an R session and execute the commands in the \tt rapache_config.R \rm R script. (You can add additional commands to the \tt rapache_config.R \rm file, e.g. specifying the number of cores available on your system, etc.)
+  }
+  \item{ To register the \Rpackage{gCMAPWeb} application with the Apache webserver, add the following lines to the \tt httpd.conf \rm, replacing \tt PATH_TO_YOUR \rm with the path to your \tt gCMAP_app.R \rm file:
+\begin{verbatim}  
+  <Location /gcmap>                                                                                                         
+          SetHandler r-handler                                                                                            
+          RFileEval PATH_TO_YOUR/gCMAP_app.R:Rook::Server$call(gcmap)
+  </Location>
+\end{verbatim}  
+  }
+
+  \item{ After restarting the Apache server, your \Rpackage{gCMAPWeb} application will be available at 
+  \begin{verbatim}  
+   YOUR_HOST_NAME://gcmap/index.rhtml
+  \end{verbatim}
+}
+
+\end{enumerate}
+
+
+\clearpage
+\newpage
+
+\bibliographystyle{abbrvnat}
+
+\clearpage
+\newpage
+
+<<>>=
+sessionInfo()
+@
+
+\end{document}

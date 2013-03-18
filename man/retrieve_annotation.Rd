@@ -1,0 +1,23 @@
+\name{retrieve_annotation}
+\alias{retrieve_annotation}
+\title{Gene symbol and name lookup}
+\usage{
+  retrieve_annotation(entrez, annotation.db)
+}
+\arguments{
+  \item{entrez}{character, Entrez identifier to look up}
+
+  \item{annotation.db}{character, name of the annotation
+  package to use for lookup}
+}
+\value{
+  data.frame with entrez, symbol and name columns
+}
+\description{
+  This function retrieves the official gene symbol and name
+  for Entrez identifiers
+}
+\author{
+  Thomas Sandmann
+}
+

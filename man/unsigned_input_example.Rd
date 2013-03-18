@@ -1,0 +1,18 @@
+\name{unsigned_input_example}
+\alias{unsigned_input_example}
+\title{Html code for generating and example query button on the unsigned gene set submission page}
+\usage{
+  unsigned_input_example()
+}
+\value{
+  Character string with html code
+}
+\description{
+  Content can be provided / modified through the global
+  parameters unsigned.input.example.popover ( text for
+  popover help ) unsigned.input.example (gene identifiers)
+}
+\author{
+  Thomas Sandmann
+}
+

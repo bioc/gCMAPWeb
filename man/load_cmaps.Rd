@@ -1,0 +1,37 @@
+\name{load_cmaps}
+\alias{load_cmaps}
+\title{Loading reference datasets}
+\usage{
+  load_cmaps(conf_data,
+    min.set.size = getOption("min.set.size", default = 5))
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+
+  \item{min.set.size}{integer, gene sets with less than
+  min.set.size members will be dropped from
+  CMAPCollections}
+}
+\value{
+  list of eSet objects
+}
+\description{
+  This function connects to / loads all reference datasets
+  and returns them in a list
+}
+\examples{
+## read the example configuration file
+conf_data <- yaml.load_file( system.file("config", "config.yml",
+             package="gCMAPWeb") )
+## load the example reference NChannelSet objects specified in
+## the configuration file
+ref.cmaps <- load_cmaps( conf_data )
+class( ref.cmaps )
+names( ref.cmaps )
+ref.cmaps[[1]]
+}
+\author{
+  Thomas Sandmann
+}
+

@@ -1,0 +1,55 @@
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <!-- customized site title -->
+        <%= cat( sprintf( "<a class='brand' href='%s'>", getOption( "home.url", default=""))) %>
+        <%= cat( getOption( "site.title", default="gCMAP") )%> 
+        <i class="icon-home icon-white"></i></a>
+        <div class="nav-collapse collapse pull-right">
+          <ul class="nav">
+            <%={
+              feedback.url <- getOption( "feedback.url", default=NULL)
+              if( !is.null (feedback.url)){
+                cat( "<li>" )
+                cat( sprintf( "<a href='%s'>", feedback.url ) )
+                cat( "<i class='icon-forward icon-white'></i>", "Feedback", "</a>","</li>", sep="\n")
+              }
+            } %>
+             <%={
+              doc.url <- getOption( "doc.url", default="help.html")
+              if( !is.null (doc.url)){
+                cat( "<li>" )
+                cat( sprintf( "<a href='%s'>", doc.url ) )
+                cat( "<i class='icon-forward icon-white'></i>", "Help", "</a>","</li>", sep="\n")
+              }
+            } %>
+             <%={
+              contact.email <- getOption( "contact.email", default=NULL)
+              if( !is.null (contact.email)){
+                cat( "<li>" )
+                cat( sprintf("<a href='%s'>", contact.email ))
+                cat( "<i class='icon-envelope icon-white'></i>", "Contact", "</a>","</li>", sep="\n")
+              }
+            } %>
+             <%={
+              name.out <- getOption( "name.out", default=NULL)
+              link.out <- getOption( "link.out", default=NULL)
+              if( !is.null( name.out ) & ! is.null( link.out )){
+                cat( "<li>" )
+                cat( sprintf( "<a href='%s'>", link.out ) )
+                cat( "<i class='icon-arrow-right icon-white'></i>", name.out, "</a>","</li>", sep="\n")
+              }
+            } %>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div class="container">
+

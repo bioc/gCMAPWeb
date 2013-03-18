@@ -1,0 +1,10 @@
+<p class="lead">Do your query genes consistently change expression in other experiments ?</p>
+To run a directional query, please provide <strong>separate categories of up- and down-regulated gene identifiers.</strong> For uni-directional gene sets, e.g. if you are only interested in up-regulated genes, simply leave the other category blank. <br>
+gCMAPWeb will use the JG statistic <a href="http://www.ncbi.nlm.nih.gov/pubmed/17127676">(Jiang &amp; Gentleman, Bioinformatics, 2007)</a>, a summarized t-statistic, to identify experiments with correlated or anti-correlated expression changes.<br>
+
+<br>Choose this option e.g. for
+<ul>
+<li>gene sets induced by the same transcription factor</li>
+<li>gene sets repressed by the same transcription factor</li>
+</ul>
+Providing gCMAP with information about the direction of regulation enables more powerful gene set enrichment analysis. If you don't have information about the directionality of your gene set, consider gCMAP's <a href="set_input.rhtml">non-directional query</a> method instead.

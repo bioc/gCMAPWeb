@@ -1,0 +1,29 @@
+\name{parse_file_input}
+\alias{parse_file_input}
+\title{Uploaded file parser}
+\usage{
+  parse_file_input(temp.file, regexp = "[+,;\t ]+",
+    n.score.col = 1)
+}
+\arguments{
+  \item{temp.file}{character, path to temporary file
+  (usually part of the POST request)}
+
+  \item{regexp}{character, a regular expression matching
+  all separators used to separate gene identifiers}
+
+  \item{n.score.col}{integer, for profile uploads
+  n.score.col specifies the number of data columns (usually
+  1)}
+}
+\value{
+  list of character vectors, one element for each row of
+  temp.file
+}
+\description{
+  This functions parses the user-uploaded files
+}
+\author{
+  Thomas Sandmann
+}
+

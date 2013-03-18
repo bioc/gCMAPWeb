@@ -1,0 +1,29 @@
+\name{validate_request}
+\alias{validate_request}
+\title{Html request validation}
+\usage{
+  validate_request(req, conf_data,
+    cmaps.concatenated.by = getOption("cmaps.concatenated.by", default = ","))
+}
+\arguments{
+  \item{req}{Request object as defined by the Rook package}
+
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+
+  \item{cmaps.concatenated.by}{character, specifying the
+  separator (e.g. semicolon, comma) used to concatenate
+  multiple requested reference databases}
+}
+\value{
+  Logical, TRUE if all required fields could be validated,
+  FALSE otherwise
+}
+\description{
+  This function extracts the content from a POST request
+  and validates its content
+}
+\author{
+  Thomas Sandmann
+}
+

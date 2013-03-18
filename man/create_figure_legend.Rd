@@ -1,0 +1,22 @@
+\name{create_figure_legend}
+\alias{create_figure_legend}
+\title{This function generates the figure legend, with a separate dom identifier for each output panel}
+\usage{
+  create_figure_legend(reference.name)
+}
+\arguments{
+  \item{reference.name}{character, name of the reference
+  database used}
+}
+\value{
+  character string with the html code element required to
+  insert the figure legend into the html report
+}
+\description{
+  This function generates the figure legend, with a
+  separate dom identifier for each output panel
+}
+\author{
+  Thomas Sandmann
+}
+

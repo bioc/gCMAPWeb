@@ -1,0 +1,180 @@
+% \VignetteIndexEntry{main}
+% \VignetteDepends{}
+% \VignetteKeywords{gCMAPWeb}
+% \VignettePackage{gCMAPWeb}
+
+\documentclass[10pt]{article}
+
+\usepackage{times}
+\usepackage[square,numbers]{natbib}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{Sweave}
+\usepackage{subfigure}
+\usepackage{underscore}
+\usepackage{hyperref}
+
+\textwidth=6.2in
+\textheight=8.5in
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rcode}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textsf{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+
+
+\title{Creating reference datasets: \\ The Broad Connectivity Map (v1)}
+\author{Thomas Sandmann}
+\date{\today}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\input{referenceDatasets-concordance}
+
+\maketitle
+\tableofcontents
+\newpage
+
+%%%%%
+\section{Introduction}
+%%%%%
+
+Public repositories, such as \href{http://www.ebi.ac.uk/arrayexpress/}{ArrayExpress} or \href{http://www.ncbi.nlm.nih.gov/geo/}{GEO} provide access to many published expression profiling datasets, featuring perturbations in many different organisms, model systems and conditions.
+
+The \href{http://www.ebi.ac.uk/gxa/}{Atlas} search engine offers a simple way to identify perturbation experiments of interest in the ArrayExpress repository.
+
+This vignette shows how to obtain and process raw microarray data from a large-scale drug perturbation study performed in human cells, the \tt Connectivity Map \rm dataset (version 1), released by \href{http://www.ncbi.nlm.nih.gov/pubmed/17008526}{Lamb and co-workers in 2006}. Similar workflows can be used to download an process many other publically available datasets.
+
+In this study, the researchers treated multiple human cell lines with 164 distinct small molecules or matched controls. In total, \href{http://www.ebi.ac.uk/arrayexpress/experiments/E-GEOD-5258/samples.html}{564 samples} were generated, RNA extracted, labeled and hybridized either to A-AFFY-113 Affymetrix (HT_HG-U133A) or A-AFFY-33 Affymetrix (HG-U133A) microarrays.
+
+The raw data for this study is available from ArrayExpress under accession \tt \href{http://www.ebi.ac.uk/arrayexpress/experiments/E-GEOD-5258}{E-GEOD-5258} \rm. The raw .cel files and the array annotations can be downloaded and compiled into a suitable \Robject{eSet} objects using the \Rpackage{ArrayExpress} Bioconductor package. Alternatively, the \href{http://www.ebi.ac.uk/arrayexpress/files/E-GEOD-5258/E-GEOD-5258.eSet.r}{final RData object} can be downloaded directly from ArrayExpress.
+
+Please note that this is a large dataset and executing the following code will download more than 700 MB of data.
+
+%%%%%
+\section{Analyzing the Broad Connectivity map (v.1) data }
+\subsection*{Data download and normalization }
+
+A call to the \tt ArrayExpress \rm function will retrieve the raw data for study E-GEOD-6907 from ArrayExpress. (As this is a large dataset, this might take while...)
+
+\begin{Schunk}
+\begin{Sinput}
+> library(ArrayExpress)
+> GEOD5258.batch <- ArrayExpress("E-GEOD-6907")
+\end{Sinput}
+\end{Schunk}
+
+As this experiment was performed on two different array platforms, a list with two affyBatch objects is returned, one for each array platform. 
+
+We normalize each object separately using the \tt rma \rm function from the \Rpackage{affy} package.
+
+\begin{Schunk}
+\begin{Sinput}
+> library( affy )
+> length( GEOD5258.batch )
+> GEOD5258.eSets <- lapply( GEOD5258.batch, rma )
+\end{Sinput}
+\end{Schunk}
+
+The \tt mapNmerge \rm function from the \Rpackage{gCMAP} package averages the expression values different probes for the same gene by mapping them to Entrez ids. Alternatively, the \tt nsFilter \rm function from the \Rpackage{genefilter} package could be used.
+
+\begin{Schunk}
+\begin{Sinput}
+> GEOD5258.eSets <- lapply( GEOD5258.eSets, mapNmerge)
+\end{Sinput}
+\end{Schunk}
+
+Now that we have mapped the expression values to Entrez Ids, we can combine the two ExpressionSets into one
+
+\begin{Schunk}
+\begin{Sinput}
+> GEOD5258.eSet <- mergeCMAPs( GEOD5258.eSets[[1]], GEOD5258.eSets[[2]] )
+\end{Sinput}
+\end{Schunk}
+
+\subsection*{Defining perturbation experiments and performing differential expression analysis }
+
+The ArrayExpress dataset is associated with extensive sample annotation information, available in the \Robject{phenoData} slot of the \Robject{ExpressionSet}. Experimental factors are marked with the \tt Factor \rm prefix in the column name.
+
+\begin{Schunk}
+\begin{Sinput}
+> head( pData(GEOD5258.eSet ))
+> conditions <- grep("^Factor", varLabels( GEOD5258.eSet ), value=TRUE)
+> conditions
+\end{Sinput}
+\end{Schunk}
+
+In this case, we are interested in studying the effect of the different compounds, which are specified in the column of the \Robject{phenoData} slot.
+Controls are annotated with the Compound level \tt none \rm.
+
+\begin{Schunk}
+\begin{Sinput}
+> unique( pData(  GEOD5258.eSet )$Factor.Value..Compound.)
+\end{Sinput}
+\end{Schunk}
+
+To associate drug perturbation with their matched controls, we require that control experiments must have been performed in the same \tt CellLine \rm and with the same \tt Vehicle \rm. With this information, the \tt splitPerturbations \rm function from the \Rpackage{gCMAP} package can group treatment and perurbation samples into individual experiments of interest. Each of these experimental instances is returned in a separate \Robject{ExpressionSet}, grouped in the GEOD5258.list list.
+
+\begin{Schunk}
+\begin{Sinput}
+> GEOD5258.list <- splitPerturbations( GEOD5258.eSet, 
+                      factor.of.interest="Compound",
+                      control="none",
+                      controlled.factors=c("CellLine", "Vehicle", "Time")
+)
+\end{Sinput}
+\end{Schunk}
+
+To track the experimental conditions assayed in each perturbation experiment, the first line (containing the perturbation) is extracted from each \Robject{phenoData} slot and deposited in a data.frame with one row for each perturbation / \Robject{ExpressionSet} in GEOD5258.list.
+
+\begin{Schunk}
+\begin{Sinput}
+> anno <- t(sapply( GEOD5258.list, function(x) pData(x)[1,conditions]))
+> anno <- apply( anno, 2, unlist)
+> anno <- data.frame( anno )
+> colnames( anno ) <- c("CellLine", "Vehicle", "Compound", "Time", "Dose")
+\end{Sinput}
+\end{Schunk}
+
+The \tt generate_gCMAP_NChannelSet \rm function performs differential expression analysis (using limma) separately for each \Robject{ExpressionSet} in the list. It returns an \Robject{NChannelSet} object containing the log2 fold change, raw p-values and z-scores for all experiments.
+
+\begin{Schunk}
+\begin{Sinput}
+> GEOD5258.ref <- generate_gCMAP_NChannelSet( GEOD5258.list, 
+                      uids=1:length( GEOD5258.list ),
+                      sample.annotation=anno)
+> pData(  GEOD5258.ref)[10:15,]
+\end{Sinput}
+\end{Schunk}
+
+This object, containing the differential expression results for 12701 genes from 214 different perturbation experiments and sample-level annotations in its \Robject{phenoData} slot, is now ready to be used as a reference dataset by \Rpackage{gCMAPWeb}.
+
+\subsection*{Inducing gene sets}
+
+If required, we can apply a threshold to one channel of the \Robject{NChannelSet} and define sets of differentially up- and down-regulated genes. For example, the following command applies a z-score cutoff of \textgreater 3 or \textless -3 to each experiment and stores the results in a sparse-matrix within a \Robject{CMAPCollection}.
+
+\begin{Schunk}
+\begin{Sinput}
+> GEOD5258.sets <- induceCMAPCollection( GEOD5258.ref, element="z", higher=3, lower=-3 )
+> head( setSizes( GEOD5258.sets ) )
+\end{Sinput}
+\end{Schunk}
+
+
+\clearpage
+\newpage
+
+<<>>=
+sessionInfo()
+@
+
+\end{document}

@@ -1,0 +1,21 @@
+\name{read_config_file}
+\alias{read_config_file}
+\title{Parser for gCMAPWeb configuration file}
+\usage{
+  read_config_file(config.file.path = system.file("config", "config.yml", package = "gCMAPWeb"))
+}
+\arguments{
+  \item{config.file.path}{character, full path to gCMAPWeb
+  configuration file}
+}
+\value{
+  a nested list
+}
+\description{
+  This function parses the gCMAPWeb configuration file (in
+  yaml format) and returns the information as a list
+}
+\author{
+  Thomas Sandmann
+}
+

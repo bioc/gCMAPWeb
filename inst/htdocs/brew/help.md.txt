@@ -1,0 +1,144 @@
+## Introduction ##
+
+Global expression profiling experiments using microarray or next-generation sequencing technology are routinely used to record how cells or tissues respond to experimental perturbations. Many perturbations, e.g. drug treatments or a genetic modifications, cause characteristic changes in gene expression - a _fingerprint_ often recognizable across different laboratories and model systems [(Lamb et al, 2006)](http://www.sciencemag.org/content/313/5795/1929.short). 
+
+Identifying different perturbations that share a similar fingerprint can reveal functional connections between drugs, genes and diseases. Starting with your set of gene identifiers or a complete set of scores from your differential gene expression experiment, the __gCMAP__ tool searches one or many reference databases for other experiments showing similar changes in gene expression. Start building your own connectivity map today !
+
+<a id="query_types"/></a> 
+## 1. Query types ##
+
+The gCMAP tool supports three types of queries:
+
+![](img/index.png)
+
+<a id="directional_query_type"/></a> 
+### 1.1 Directional queries ###
+
+For this query, you need a __set of gene identifiers__, e.g. Entrez identifiers or gene symbols - and you need which genes are expected to change their expression in the same directions. For example, you may know that one set of genes is up-regulated in response to your perturbation of interest, while another set of genes is down-regulated instead.
+
+The __gCMAP__ tool can leverage this information to find experiments, in which
+  - a significant proportion of these genes was also differentially regulated
+  - in the same (correlated) or opposite (anti-correlated) directions as your query.
+
+-  You only know about up- regulated genes ? Simply leave the text input field for down-regulated genes empty.
+
+-  You know that your genes changes consistently into the same direction, but are not sure if they go up or down ? Never mind, just paste all of them either into the up- or down-regulated text field (but not both). The __gCMAP__ tool will report experiments with significant changes in either direction and indicate whether the direction was the same (_correlated_) or opposite (_anti-correlated_) with your choice.
+  
+<a id="non_directional_query_type"/></a> 
+### 1.2 Non-directional queries ###
+
+If you have a set of gene identifiers that may show mixed expression changes, in other words some may be up- some down-regulated, this query is for you. The _gCMAP_ tool won't make any assumptions about the direction of expression change and will retrieve all experiments, in which a significant fraction of your genes of interest showed differential expression either way.
+
+<a id="profile_query_type"/></a> 
+### 1.3 Profile queries ###
+
+If you have done your own differential gene expression analysis or have access to the complete results from a published study, you can provide the __gCMAP__ tool with the complete list of differential expression scores (e.g. z-scores). For this query, you every row needs to contain two pieces of information:
+
+  - a gene identifier
+  - the associated differential gene expression score for this gene
+
+<a id="query_submission"/></a>
+## 2. Query submission
+
+<a id="directional_query_submission"/></a> 
+### 2.1 Submitting a directional query ###
+
+If you want to submit a [directional gene expression query](#directional_query_type), e.g. two sets of gene identifiers - one with up- and one with down-regulated genes, you need to provide the following pieces of information.
+
+![](img/signed_input.png)
+
+1.  A list of up-regulated gene identifiers. If none of the genes are up-regulated just leave this section blank. You can either paste the identifiers directly in to the box (separated by commas or semicolons) or upload a plain text file containing the identifiers (separated by commas, semicolons or tab-stops).
+2.  You list of down-regulated gene identifiers. Again, if you don't know any, just leave this section empty
+3.  To make sure the __gCMAP__ tool correctly understands your query, please identify the species the gene identifiers refer to.
+4.  What kind of identifier are you providing ? If you use microarray probe ids, the __gCMAP__ tool will also prompt you to specify the array platform.
+5.  Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.
+6.  Happy with your choices ? Great, go ahead and submit your query !
+
+Hint: The __More info__ button provides additional information and points out references for the gene-set enrichment method used by the __gCMAP__ tool uses for this query.
+
+<a id="non_directional_query_submission"/></a> 
+### 2.2 Submitting a non-directional query ###
+
+A [non-directional query](#non_directional_query_type) is a good choice if you have a mixed bag of gene identifiers, some of which may by up- some down-regulated. (But hey, why not give the [directional query](#directional_query_type) a try as well ? Just in case there are experiments, in which they all change consistently in one or the other direction.)
+
+![](img/unsigned_input.png)
+
+Please provide the following pieces of information:
+
+1.  A list of gene identifiers (direction of expression change unknown). For this query, you need to supply at least two identifiers. (If you only have one, choose the directional query method instead - by definition, a single gene can only either be up- or down-regulated.)
+2.  To make sure the __gCMAP__ tool correctly understands your query, please identify the species the gene identifiers refer to.
+3.  What kind of identifier are you providing ? If you use microarray probe ids, the __gCMAP__ tool will also prompt you to specify the array platform.
+4.  Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.
+5.  Happy with your choices ? Great, go ahead and submit your query !
+
+The __More info__ button provides additional information and references about gCMAP's gene-set enrichment method
+
+<a id="profile_query_submission"/></a> 
+### 2.3 Submitting a profile query ###
+
+You have a complete set of global differential gene expression scorse ? Great, go ahead and run a [profile query](#profile_query_type) by pasting them into box number 1 - or uploading them in a plain text file.
+
+![](img/profile_input.png)
+
+1.  Gene identifiers and differential gene expression scores. You need one row for each gene, each containing the gene identifier and the differential gene expression score (e.g. z-score) separated by a comma, a semicolon or a tab-stop.
+2.  To make sure the __gCMAP__ tool correctly understands your query, please identify the species the gene identifiers refer to.3.  What kind of identifier are you providing ? If you use microarray probe ids, the __gCMAP__ tool will also prompt you to specify the array platform.
+4.  Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.
+5.  Happy with your choices ? Great, go ahead and submit your query !
+
+The __More info__ button provides additional information and references about gCMAP's gene-set enrichment method
+
+<a id="results"/></a> 
+## 3. Results ##
+
+<a id="gene_set_results"/></a> 
+### 3.1 Gene-set level results
+
+Once you submitted your query, the __gCMAP__ tool will search all selected databases for significantly similar experiments. You will receive a separate panel with results for each reference, each of them containing the following elements:
+
+![](img/set_level_results.png)
+
+1.  This plot gives you a high-level overview of the __gCMAP__ results. The grey density plot summarizes the scores for all experiments in this reference dataset - similar or not. In this example (and most likely for your query as well) the majority of experiments is not very similar at all and receives a score around zero. For reference, the normal distribution is shown as a dashed line. 
+
+  Few scores obtain very high or very low scores - they are highlighted as red and blue dashes at the bottom of the plot, respectively, if their score is >  3 or < -3. 
+
+2.  On the right, the distribution of similarity scores for this reference dataset is shown as a heatmap. High scores are shown at the top (red) and low scores at the bottom (blue). 
+  In this example, only few experiments received high scores (red), indicating expression changes in the same direction as in the query, but a large number of experiments showed consistent changes of the query genes in the opposite direction (blue) than specified in your query.
+3.  Click the __Legend__ button to see additional information about the score columns shown in the table below.
+4.  Result table with one row per significant gene set, sorted by false-discovery rate (FDR). By default, only the top 50 most significant gene sets are included.
+5.  Miniature plot with results for individual genes included in the gene-set reported in this row. Click to see larger version.
+    To see the full results for this gene set, click on the number reported in the __nFound__ column, highlighting the number of genes shared between your query and the reference gene-set.
+6.  At the bottom of the page, you can find links to download
+  -  the result table in tab-delimited format
+  -  the complete html report, including all plots and gene-level pages as a zip-compressed archive.
+
+<a id="gene_results"/></a> 
+### 3.2 Gene level results ###
+
+Once you have identified a reference experiment that is significantly similar to your query, you can inspect the expression changes of your genes of interest individually.
+
+When you click on the __nFound__ column in the [main result table](#gene_set_results),  highlighting the number of genes shared between your query and the reference gene-set, you will be presented with the gene-level results in one of two formats:
+
+#### 3.2.1 Gene-level report with differential expression scores ####
+
+![](img/gene_level_results.png)
+
+1.  If the reference database contains gene-level scores for this experiment, the distribution of the scores will be shown in a density plot. The plot may look similar to that shown on the [main result page](#gene_set_results) - but it contains very different data !
+
+  At the top, the grey density shows the differential expression scores for all genes in this experiment, up-regulated genes have high scores, down-regulated genes have low score and unchanged genes have scores around zero.
+
+  Each dash at the bottom of the plot corresponds to a single gene. If you submitted a signed query, the scores for your up-regulated genes are shown in red, those you labeled down-regulated are shown in blue. In the example shown above, most of the genes expected to be up-regulated (red) received scores < 0, while most of the genes expected to be down-regulated (blue) received scores >  0. The results for this experiment are __anti-correlated__ with the query.
+
+2.  Below the plot, the results for all query genes found in this experiment are tabulated. (For profile queries, only the genes that showed significant differential expression in the reference experiment are shown.)
+
+#### 3.2.2 Gene-level report without differential expression scores ####
+
+![](img/gene_level_results_pie.png)
+
+Some reference datasets do not provide gene-level scores. For example, public databases like the [MSigDB database](http://www.broadinstitute.org/gsea/msigdb/collections.jsp) list only gene identifiers for many different gene sets. 
+
+1.  In this case, the __gCMAP__ tool identifies reference experiments with significant overlap between query sets and the reference database using a Fisher test. The fraction of query genes overlapping with the reported reference gene set is displayed as a __pie chart__.
+
+2.   Below the plot, the results for all query genes found in this experiment are tabulated.
+
+
+Thomas Sandmann, 1/14/2013

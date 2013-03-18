@@ -1,0 +1,154 @@
+<% {
+  #submit browser request for analysis
+  analysis.results <- try( gCMAPWeb:::cmapAnalysis(req, conf_data, reference.cmaps, element="z"), silent=TRUE)
+  
+  if( getOption( "save.intermediates", default = TRUE) == TRUE){
+    save(analysis.results, file=file.path(tempdir(),"analysis_results.rdata"))
+  }
+  # -------- create html page
+  
+  res.html <- capture.output({
+    
+    # -------- common header section
+    gCMAPWeb:::html_header()
+    
+    # common body section, top
+    gCMAPWeb:::body_first()
+    cat("<div class='span12'>")
+    
+    # ----- error
+    if( inherits( analysis.results, "try-error")){ 
+      cat( sprintf("<legend><h4>Oh no, an error occured</h4></legend><div class='alert alert-error'>%s</div>", 
+                   analysis.results[[1]]) )
+      analysis.results <- list()
+      gCMAPWeb:::html_body_last()
+      tmp_filename <- "."
+      
+    } else {
+      
+      #------- id conversion notice
+      if( !is.null( analysis.results[["conversion"]] )){ 
+        cat( "<legend><h4>Identifier conversion</h4></legend>")
+        cat( sprintf("%s <a href='%s'>(Details)</a><br><br>", 
+                     analysis.results$conversion$feedback,
+                     analysis.results$conversion$html) )
+      }
+
+      #------- create tabs for each analysis
+      results <- analysis.results[["reports"]]
+      
+      ## create tab for first result
+      cat("<ul class='nav nav-tabs' id='myTab'>")
+      cat( sprintf("<li class='active'><a href='#%s' data-toggle='tab'>%s</a></li>", 
+                   names( results)[1], names( results)[1])
+      )
+      
+      ## create tab for all other results
+      for ( n in names( results)[-1]){ 
+        cat( sprintf("<li><a href='#%s' data-toggle='tab'>%s</a></li>", n, n) )
+      }
+      cat("</ul>")
+      
+      ## -------  define content for the tabs
+      cat ("<div class='tab-content'>")
+      
+      ## content for the first tab
+      cat( sprintf("<div class='tab-pane active' id='%s'>", names( results)[1]) )
+      cat( sprintf("<legend><h4>Analysis summary</h4></legend>" ))
+      cat( results[[1]][["header"]], sep="\n")
+      cat( results[[1]][["error"]], sep="\n")
+      cat( "<div class='span12'>")
+      cat( "<div class='span5'>")
+      cat( results[[1]][["overview"]], sep="\n")
+      cat("</div>")
+      cat( "<div class='span5'>")
+      cat( results[[1]][["heatmap"]], sep="\n")
+      cat("</div>")
+      cat("</div>")
+        if( !is.null( results[[1]][["overview"]] )){      
+      	    gCMAPWeb:::create_figure_legend( names( results)[1])
+      	    cat( "<div class='span12'>")
+      	    cat( "<div class='span5'>")
+      	    cat( results[[1]][["overview.legend"]], sep="\n")
+      	    cat("</div>")
+      	    cat( "<div class='span5'>")
+      	    cat( results[[1]][["heatmap.legend"]], sep="\n")
+      	    cat("</div>")
+      	    cat("</div>")      
+            cat( "<br></div>")
+      }
+      cat( results[[1]][["header.details"]], sep="\n")
+      cat( results[[1]][["legend"]], sep="\n")
+      cat( results[[1]][["table"]], sep="\n")
+      cat("<br><br>")
+      cat( results[[1]][["header.downloads"]], sep="\n")
+      cat( results[[1]][["download"]], sep="\n")
+      cat("<br>")
+      cat("</div>")
+      
+      ## content for all following tabs
+      for( n in names( results)[-1]){ 
+        cat( sprintf("<div class='tab-pane' id='%s'>", n ))
+        cat( sprintf("<legend><h4>Analysis summary</h4></legend>" ))
+        cat( results[[n]][["header"]], sep="\n")
+        cat( results[[n]][["error"]], sep="\n")
+        cat( "<div class='span12'>")
+        cat( "<div class='span5'>")
+        cat( results[[n]][["overview"]], sep="\n")
+        cat("</div>")
+        cat( "<div class='span5'>")
+        cat( results[[n]][["heatmap"]], sep="\n")
+        cat("</div>")
+        cat("</div>")
+        if( !is.null( results[[n]][["overview"]] )){
+            gCMAPWeb:::create_figure_legend( n )	 
+            cat( "<div class='span12'>")
+            cat( "<div class='span5'>")
+            cat( results[[n]][["overview.legend"]], sep="\n")
+            cat("</div>\n")
+            cat( "<div class='span5'>")
+            cat( results[[n]][["heatmap.legend"]], sep="\n")
+            cat("</div>")
+            cat("</div>")
+            cat( "<br></div>")
+        }
+        cat( "<div class='clearfix'></div>")
+        cat( results[[n]][["header.details"]] )
+        cat( results[[n]][["legend"]])
+        cat( results[[n]][["table"]], sep="\n")
+        cat("<br><br>")
+        cat( results[[n]][["header.downloads"]], sep="\n")
+        cat( results[[n]][["download"]], sep="\n")
+        cat("<br>")
+        cat("</div>")
+      }
+      ## close divs
+      cat("</div>","</div>", sep="\n")
+      
+      ## close body section
+      gCMAPWeb:::html_body_last()
+  	  cat("</body>")
+      
+      ## add footer
+      cat("<footer><p align='right'><br>") 
+      cat(sprintf("gCMAPWeb version %s", package.version("gCMAPWeb")))
+      cat("</p></footer>")
+
+      cat("</html>")
+
+      tmp_filename <- analysis.results[["tmp_filename"]]
+    }
+  }) 
+  
+  ## save html page to disk
+  writeLines( res.html, con=file.path( tempdir(), "results", tmp_filename, "gCMAP_report.html") )
+  gCMAPWeb:::create_zip( tmp_filename, file.path( tempdir(), "results" ) )
+  } %>
+
+<%# ------ redirect to the save html report -%>
+<%{
+cat( 
+  sprintf( "<meta HTTP-EQUIV='REFRESH' content='0; url=%s'>", 
+  file.path("results", tmp_filename, "gCMAP_report.html") )
+) 
+} %>

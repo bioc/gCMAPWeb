@@ -1,0 +1,137 @@
+<%= gCMAPWeb:::html_header() %> <!-- common header html -->
+</head>
+<%= gCMAPWeb:::body_first() %>
+
+<!-- /form -->
+<div class="row">
+  <form id="query_form" enctype="multipart/form-data" method="post" action="gcmap_analysis.rhtml">
+
+    <div class="span8">
+
+     <!-- /hidden field to submit query type -->
+     <input type="hidden" name="inputType" value="profile">
+     <legend><h3>Profile query</h3>
+       <span class="label label-info pull-right" data-toggle="collapse" data-target="#details">More info</span>   </legend>
+       <div id="details" class="collapse">
+        <div class="well">
+         <%= brew::brew( "brew/profile_details.html" ) %>
+       </div>
+     </div>  
+
+     <div>
+
+      <!-- /query -->
+      <div class="span6">
+        <div class="control-group">
+          <label class="control-label">The following gene identifiers and expression scores</label>
+          <div class="controls">  
+
+            <!--- <label>The following gene identifiers</label> -->
+            <textarea name="query_data" class="span6 user_input" rows="3" rel="popover" data-content="Please paste one identifier and score per row, separated by , ; or tab-stops. E.g. <br> TP53, 1.23 <br> ACTN2, -1.5" data-placement="right" data-trigger="hover"></textarea>
+
+            <!--- file upload --> 
+            <input type="file" name="query_file" class="user_input">
+            <%= gCMAPWeb:::profile_input_example() %> 
+              <br><br>
+            </div>
+        </div> 
+      </div>
+    </div>
+
+    <!-- /species -->
+    <div class="span2">
+      <label>are from</label>
+    <%= gCMAPWeb:::species_radio_html( conf_data ) %>
+    </div>
+    <!-- /idType -->
+
+    <div class="span2">
+      <label>
+        and represent
+      </label>
+      <%= gCMAPWeb:::identifier_radio_html( conf_data ) %>
+    </div>
+    <!-- /platform -->
+    <div class="span2">
+      <label id="platform_request">
+        from this microarray
+      </label>
+      <%= gCMAPWeb:::platform_radio_html( conf_data ) %>
+      </div>
+    </div>
+    <!-- /reference datasets -->  
+    <div class="span8">
+      <legend id="ref_legend"><h4>Please choose one or more reference databases</h4></legend>
+      <div class="control-group">
+        <div class="controls">  
+          <div class="span6">
+          <%= gCMAPWeb:::reference_radio_html(conf_data, reference.cmaps) %>
+          <input type="hidden" name="selected_cmaps"> <!-- used to concatenate individual cmaps for POST -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- output error messages here  -->
+    <div class="span8">
+      <br>
+      <div id="error_messages" class="span6">
+      </div>
+    </div>
+
+    <!-- /submit -->
+    <div class="span8">
+      <button id="submitButtonId" type="submit" class="btn btn-primary" data-loading-text="Analyzing...">Submit</button>
+      <a href="profile_input.rhtml" class="btn">Clear</a>
+      <br><br>
+    </div>
+  </form>
+
+  <!--- feedback will be inserted here -->
+  <div class="span6">
+    <div id="feedback"></div>
+  </div>
+
+</div> <!-- end of container -->
+<!-- Le javascript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- jQuery v 1.8.2 -->
+  <script src="js/jquery-1.8.2.min.js"></script>
+
+  <!-- jQuery validate plugin v. 1.10.0 -->
+  <script src="js/jquery.validate.min.js"></script>
+
+  <!-- custom javascript functions -->
+  <script src="js/gCMAPWeb.js"></script>
+
+  <!-- Bootstrap JS, the minified bundle -->
+  <script src="js/bootstrap.min.js"></script>
+
+  <!-- underscore lib , various utilities  -->
+  <script src="js/underscore-min.js"></script>
+
+  <!-- custom scripts to show / hide elements -->
+
+   <script>
+  $(document).ready(
+    function() {
+      $('[supported_query_type]').not('[supported_query_type*="profile"]').remove();
+      <%= gCMAPWeb:::hide_species_js( conf_data) %>
+      $("#platform_request").prop('disabled',true);
+      $("#platform_request").hide();
+      $('[name="platform"]').prop('disabled',true);
+      $('[name="platform"]').hide();
+      $('[rel="popover"]').popover();
+      $('.btn').button('reset')
+      $('form').each(function() { this.reset() } );  
+    submit_form();  // validate and submit form
+  }); // end of document ready 
+
+  $(window).unload( function () {
+     $('#submitButtonId').button('reset')
+  });
+  </script>
+
+</body>
+</html> 

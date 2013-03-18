@@ -1,0 +1,39 @@
+\name{create_legend}
+\alias{create_legend}
+\title{This function reads a CMAPResults object and returns the html code to display a legend for all columns that have more descriptive annotations in the varMetadata slot.
+A standard set of columns is selected for display in the legend through the 'keep' parameter. In addition, all columns with annotations in the labelDescription field of the varMetadata slot are included if the field content differs from the column name.}
+\usage{
+  create_legend(res, reference.name,
+    keep = c("set", "trend", "FDR", "effect", "nSet", "Genes"),
+    swap.colnames = getOption("swap.colnames", default = list(padj = "FDR", nFound = "Genes")))
+}
+\arguments{
+  \item{res}{CMAPResults object}
+
+  \item{reference.name}{character, ame of the reference
+  database used}
+
+  \item{keep}{character, a vector with column names that
+  are always included in the legend}
+
+  \item{swap.colnames}{list, containing alternative names
+  for CMAPResults columns.}
+}
+\value{
+  character string with the html code element required to
+  insert the legend into the html report
+}
+\description{
+  This function reads a CMAPResults object and returns the
+  html code to display a legend for all columns that have
+  more descriptive annotations in the varMetadata slot. A
+  standard set of columns is selected for display in the
+  legend through the 'keep' parameter. In addition, all
+  columns with annotations in the labelDescription field of
+  the varMetadata slot are included if the field content
+  differs from the column name.
+}
+\author{
+  Thomas Sandmann
+}
+

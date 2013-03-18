@@ -1,0 +1,21 @@
+\name{html_body_last}
+\alias{html_body_last}
+\title{Html footer}
+\usage{
+  html_body_last(url.base = NULL)
+}
+\arguments{
+  \item{url.base}{character, path to htdocs directory
+  (optional)}
+}
+\value{
+  Html code as character string
+}
+\description{
+  Closing html code, including references to jquery,
+  bootstrap and dataTables javascript libraries
+}
+\author{
+  Thomas Sandmann
+}
+

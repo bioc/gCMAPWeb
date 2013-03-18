@@ -1,0 +1,76 @@
+##------ Navigation bar
+getOption( "home.url", default="") ##FIXME set correct URL when starting the server !
+getOption( "doc.url", default="/help.rthml")
+getOption( "feedback.url", default=NULL)
+getOption( "contact.email", default=NULL)
+getOption( "name.out", default=NULL)
+getOption( "link.out", default=NULL)
+
+##------ processing options
+getOption( "save.intermediates", default=TRUE)
+getOption( "element", default="z")
+getOption( "min.set.size", default=5)
+getOption( "max.set.size", default=Inf)
+getOption( "lower.threshold", default="-3")
+getOption( "higher.threshold", default="3")
+getOption( "induce.from.element", default="z")
+getOption( "cmaps.concatenated.by", default=",")
+getOption( "max.results", default=50)
+getOption( "min.found", default=1)
+getOption( "max.padj", default=0.1)
+
+##------- output options
+getOption( "gene.level.report", default=TRUE)
+getOption( "gene.level.plot", default=TRUE)
+getOption( "excluded.cols", default=c("geneScores", "signed", "pval", "UID"))
+getOption( "swap.colnames", default=list(padj="FDR", nFound="Genes"))
+getOption( "table.javascript", default=TRUE)
+getOption( "show.heatmap", default=TRUE)
+
+##----- text for the index html page
+getOption( "site.title", default="gCMAP")
+getOption( "index.main", default="gConnectivity Map")
+getOption( "index.sub", default="a search engine for differential gene expression profiles.")
+getOption( "index.text", default="Compare your favorite genes to thousands of experiments performed inside and outside Genentech. Correlate results across different platforms - and connect genes, disease phenotypes and treatments.")
+getOption( "index.message", default=NULL)
+getOption( "index.quote", default="<p>What if at least some parts of [ the laborious screening of genetic or chemical libraries ] could be systematized and centralized? <br>And hits found and hypotheses generated with something resembling an internet search engine? <br>These are the questions the Connectivity Map project set out to answer.</p><small>Justin Lamb in <cite title='Source Title'>Nature Reviews Cancer 7, 54-60 (January 2007)</cite></small></blockquote>")
+getOption( "supported.inputType", default=c("non-directional", "directional", "profile"))
+getOption( "supported.idType", default=c("symbol", "entrez", "probe"))
+
+
+##----- example queries
+getOption( "signed.input.example.down", default="101, 10124, 10487, 10826, 11309")
+getOption( "signed.input.example.up", default="10007, 10273, 10434, 10560")
+getOption( "unsigned.input.example", default="10007, 10273, 10434, 10560")
+getOption( "profile.input.example", default="100505783, 4.11\\n100131096, 3.7\\n100130992")
+getOption( "unsigned.input.example.popover", default="Example data with human Entrez identifiers" )
+getOption( "signed.input.example.popover", default="Example data with human Entrez identifiers")
+getOption( "profile.input.example.popover", default="Example data with human Entrez identifiers and z-scores")
+
+##------- figure legends
+getOption( "gene.profile.legend", default="<strong>Top: </strong>The grey density displays the distribution of all <strong>differential expression scores in the query</strong> you submitted. The colored line(s) highlight where the genes annotated as differentially expressed in the reference experiment fall in your query distribution.<br>Scores for genes annotated as up-regulated in the reference experiment are shown in red, those annotated as down-regulated in the reference dataset are shown in blue.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a gene in the reference dataset, following the same color scheme as in the density plot above.")
+
+getOption( "gene.set.legend", default=sprintf("<strong>Left: </strong>Distribution of similarity scores between your query and all instances in the selected reference database. For reference, a standard normal distribution is indicated as a dotted line. The (up to) top %s scores for significantly correlated (red) or anti-correlated (blue) instances are indicated in the rug.<br><strong>Right: </strong>A heatmap of the rank-ordered similarity scores.", getOption( "max.results", default=50))
+
+getOption( "gene.density.legend", default="<strong>Top: </strong>The grey density shows the differential expression scores for all genes in this reference dataset, up-regulated genes have high scores, down-regulated genes have low scores and unchanged genes have scores around zero. If you submitted a signed query, the distribution of scores for your up-regulated genes are shown in red, and for those you labeled down-regulated in blue. Otherwise, a single distribution for all query genes is shown in black.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a single query gene, following the same color scheme as in the density plot above.")
+
+getOption( "gene.pie.legend", default="This pie chart shows how many of your query genes are also annotated in this reference dataset. The reported FDR and effect sizes were calculated using Fisher's exact test and reflect the likelihood of observing the overlap (grey) between your query and the reference gene sets, taking into account the size of the reference set and the total number of genes in the database.")
+
+
+
+##----------------- my current options
+options( 
+home.url="index.rhtml", 
+doc.url="https://sites.google.com/a/gene.com/gcmap/",
+feedback.url="https://docs.google.com/a/gene.com/spreadsheet/viewform?formkey=dFZtSDRQTkR1MFVxSTIzMmRGbHIzN3c6MQ#gid=0",
+contact.email="mailto:sandmat1@gene.com?Subject=gCMAP",
+name.out="gRED",
+link.out="http://gred.gene.com/groups/gred/index.html",
+index.message="Welcome ! Please help us make gCMAP even more useful to you by providing <a href='https://docs.google.com/a/gene.com/spreadsheet/embeddedform?formkey=dFZtSDRQTkR1MFVxSTIzMmRGbHIzN3c6MQ'>feedback.</a>"
+)
+
+##----- object level annotation
+
+experimentData( eset )@other$supported.query	c("unsigned", "directional", "profile")
+abstract( eset )
+experimentData( eset )@title

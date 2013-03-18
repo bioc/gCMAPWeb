@@ -1,0 +1,37 @@
+\name{gCMAPWeb}
+\alias{gCMAPWeb}
+\title{Start local gCMAPWeb instance}
+\usage{
+  gCMAPWeb(config.file.path = system.file("config", "config.yml", package = "gCMAPWeb"),
+    url.root = system.file("htdocs", package = "gCMAPWeb"))
+}
+\arguments{
+  \item{config.file.path}{character, path to a gCMAPWeb
+  configuration file in yaml format}
+
+  \item{url.root}{character, path to the htdocs folder}
+}
+\value{
+  an Rhttpd class object
+}
+\description{
+  This function starts a gCMAPWeb instance on the local
+  machine using R's internal web server.
+}
+\examples{
+\dontrun{
+## start a gCMAPWeb instance with the example data and
+## configuration provided in the package
+gCMAPWeb()
+## same as above, explicitely specifying the location
+## of the configuration file
+gCMAPWeb(
+config.file.path = system.file("config", "config.yml",
+                                package = "gCMAPWeb" )
+)
+}
+}
+\author{
+  Thomas Sandmann
+}
+

@@ -1,0 +1,25 @@
+\name{identifier_radio_html}
+\alias{identifier_radio_html}
+\title{Html code for identifier type radio button selectors}
+\usage{
+  identifier_radio_html(conf_data, single = FALSE)
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+
+  \item{single,}{logical, use singular nouns for
+  radiobutton labels ?}
+}
+\value{
+  Html code as character string.
+}
+\description{
+  This function generates the html code required to display
+  radio buttons for the supported identifier types
+  specified in the gCMAPWeb configuration file
+}
+\author{
+  Thomas Sandmann
+}
+

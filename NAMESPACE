@@ -1,0 +1,70 @@
+importClassesFrom(Biobase, eSet, NChannelSet)
+
+importClassesFrom(gCMAP, CMAPCollection, SignedGeneSet)
+
+importClassesFrom(GSEABase, GeneSet)
+
+importClassesFrom(methods, character)
+
+importMethodsFrom(AnnotationDbi, keys, sample)
+
+importMethodsFrom(bigmemory, ncol, nrow, print)
+
+importMethodsFrom(Biobase, abstract, assayData, content,
+                  experimentData, ExpressionSet, exprs, featureNames,
+                  pData, "pData<-", phenoData, "phenoData<-",
+                  sampleNames, varLabels, varMetadata, "varMetadata<-")
+
+importMethodsFrom(BiocGenerics, "annotation<-", cbind, colnames,
+                  density, duplicated, get, image, lapply, match,
+                  order, paste, sapply, sort, tapply, union, unique,
+                  unlist)
+
+importMethodsFrom(gCMAP, cmapTable, effect, fisher_score, geneScores,
+                  geneSign, gsealm_jg_score, induceCMAPCollection,
+                  members, minSetSize, nFound, nSet, padj, plot, set,
+                  signed, SignedGeneSet, trend)
+
+importMethodsFrom(GSEABase, geneIds, geneIdType, GeneSet, intersect,
+                  mapIdentifiers, setdiff)
+
+importMethodsFrom(IRanges, as.vector, "colnames<-", gsub, ifelse,
+                  "%in%", levels, mean, median, merge,
+                  na.omit, rev, split, sub, subset, t, trim, which)
+
+importFrom(Rook, Brewery, Builder, Redirect, Rhttpd, Static)
+
+importFrom(annotate, getAnnMap)
+
+importFrom(bigmemoryExtras, attachAssayDataElements)
+
+importFrom(Biobase, assayDataElement, assayDataElementNames)
+
+importFrom(brew, brew)
+
+importFrom(graphics, abline, box, frame, layout, legend, lines, mtext,
+           par, pie, plot.new, polygon, rug, stripchart, title)
+
+importFrom(grDevices, col2rgb, colorRampPalette, dev.off,
+           png, rgb)
+
+importFrom(GSEABase, AnnotationIdentifier, EntrezIdentifier,
+           SymbolIdentifier)
+
+importFrom(hwriter, hwrite, hwriteImage)
+
+importFrom(methods, as, new)
+
+importFrom(parallel, mclapply)
+
+importFrom(stats, as.dendrogram, dist, dnorm, hclust, p.adjust, pnorm,
+           rnorm)
+
+importFrom(utils, data, installed.packages, read.delim, sessionInfo,
+           URLdecode, write.table)
+
+export(exampleCMAP)
+export(examplePost)
+export(gCMAPWeb)
+export(load_cmaps)
+export(validate_config_file)

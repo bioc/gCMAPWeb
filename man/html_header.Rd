@@ -1,0 +1,21 @@
+\name{html_header}
+\alias{html_header}
+\title{Html header and bootstrap css stylesheet}
+\usage{
+  html_header(url.base = NULL)
+}
+\arguments{
+  \item{url.base}{character, path to htdocs directory
+  (optional)}
+}
+\value{
+  Html code as a character string
+}
+\description{
+  Html header including link to the bootstrap cerulean css
+  stylesheet
+}
+\author{
+  Thomas Sandmann
+}
+

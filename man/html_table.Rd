@@ -1,0 +1,27 @@
+\name{html_table}
+\alias{html_table}
+\title{Format data.frame as html table}
+\usage{
+  html_table(df, table_id)
+}
+\arguments{
+  \item{df}{A data frame}
+
+  \item{table_id}{Character, specifying the id tag for the
+  html table}
+}
+\value{
+  Html code as a character string.
+}
+\description{
+  Function to format a data.frame as an html table
+}
+\details{
+  This function uses the thead and tbody tags required for
+  the dataTables javascript to create interactive html
+  tables.
+}
+\author{
+  Thomas Sandmann
+}
+

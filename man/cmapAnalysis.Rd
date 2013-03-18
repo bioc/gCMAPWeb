@@ -1,0 +1,35 @@
+\name{cmapAnalysis}
+\alias{cmapAnalysis}
+\title{Function controlling the gCMAP analysis workflow}
+\usage{
+  cmapAnalysis(req, conf_data, reference.cmaps,
+    element = getOption("element", default = "z"),
+    save.intermediates = getOption("save.intermediates", default = FALSE))
+}
+\arguments{
+  \item{req}{a Rook Request object}
+
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+
+  \item{reference.cmaps}{list, containing the reference
+  database eSet objects}
+
+  \item{element}{character, identifying the elementName of
+  the channel extracted from NChannelSet objects}
+
+  \item{save.intermediates}{logical, if TRUE rdata files of
+  intermediate results will be stored in the temporary
+  directory for debugging}
+}
+\value{
+  a list with three elements: conversion, reports and
+  tmp_filename
+}
+\description{
+  This function controls the gCMAPWeb analysis workflow
+}
+\author{
+  Thomas Sandmann
+}
+

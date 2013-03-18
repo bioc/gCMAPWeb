@@ -1,0 +1,88 @@
+\name{generate_report}
+\alias{generate_report}
+\title{gCMAPWeb reporting function}
+\usage{
+  generate_report(cmap.result, reference, reference.name,
+    annotation.db, element, query, tmp_filename,
+    title = "",
+    max.results = getOption("max.results", default = 50),
+    min.found = getOption("min.found", default = 1),
+    max.padj = getOption("max.padj", default = 0.1),
+    gene.level.report = getOption("gene.level.report", default = TRUE),
+    gene.level.plot = getOption("gene.level.plot", default = TRUE),
+    reportDirectory = tempdir(),
+    excluded.cols = getOption("excluded.cols", default = c("geneScores", "signed", "pval", "UID", "z.shift", "log_fc.shift", "mod_fc.shift")),
+    swap.colnames = getOption("swap.colnames", default = list(padj = "FDR", nFound = "Genes")))
+}
+\arguments{
+  \item{cmap.result}{CMAPResults object}
+
+  \item{reference}{eSet object, the full reference
+  database, typically an NChannelSet or CMAPCollection
+  object}
+
+  \item{reference.name}{character, the name of the
+  reference database}
+
+  \item{annotation.db}{character, the name of the
+  annotation package used to lookup gene identifiers}
+
+  \item{query}{a GeneSet, SignedGeneSet or ExpressionSet
+  object used as query for the gene-set-enrichment analysis
+  giving rise to 'cmap.result'}
+
+  \item{element}{character, the assayDataElementName to
+  extract from NChannelSet objects}
+
+  \item{tmp_filename}{character, the name of the temporary
+  output folder}
+
+  \item{title}{character, title of the report}
+
+  \item{max.results}{integer, maximum number of results to
+  return}
+
+  \item{min.found}{integer, minimum number of gene set
+  members that need to overlap with the user query. Gene
+  sets with matching members less than min.found will not
+  be returned as results.}
+
+  \item{max.padj}{numeric, maximum adjusted p-value for a
+  gene set to be considered significantly similar. Results
+  with adjusted p-values larger than max.padj will not be
+  returned.}
+
+  \item{gene.level.report}{logical, create gene-level
+  reports ?}
+
+  \item{gene.level.plot}{logical, create gene-level plots
+  ?}
+
+  \item{reportDirectory}{character, path to temporary
+  output directory for this session. Default=tempdir()}
+
+  \item{excluded.cols}{character vector listing columns in
+  the CMAPResults objects that should NOT be included in
+  the report}
+
+  \item{swap.colnames}{list, containing alternative names
+  for CMAPResults columns.}
+}
+\value{
+  a list of character strings, either containing html code
+  snippets or paths to result files. These elements are
+  used to brew the final result html page.
+}
+\description{
+  This function reveives the results of a gene-set
+  enrichment analysis and the original reference databases
+  to generate plots and html code elements for the final
+  report.
+}
+\details{
+  This function is called by the cmapAnalysis function
+}
+\author{
+  Thomas Sandmann
+}
+

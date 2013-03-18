@@ -1,0 +1,22 @@
+\name{inputType_buttons}
+\alias{inputType_buttons}
+\title{Html code for the query type selection buttons on the gCMAPWeb index page}
+\usage{
+  inputType_buttons(conf_data)
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  Html code as character string.
+}
+\description{
+  This function generates the html code required to
+  generate the query type selection buttons on the main
+  index.rhtml page
+}
+\author{
+  Thomas Sandmann
+}
+

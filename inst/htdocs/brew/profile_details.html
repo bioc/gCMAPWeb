@@ -1,0 +1,8 @@
+<p class="lead">Are genes changing expression in other studies consistantly up- or down-regulated in your experiment ?</p>
+To compare the results of a genome-wide differential gene expression analysis to experiments in the reference database, please provide two data columns: <strong>the gene identifiers and the associated differential expression scores</strong>.<br>
+gCMAPWeb will use the JG statistic <a href="http://www.ncbi.nlm.nih.gov/pubmed/17127676">(Jiang &amp; Gentleman, Bioinformatics, 2007)</a>, a summarized t-statistic, to identify experiments with correlated or anti-correlated expression changes.<br><br>
+Choose this option e.g. to analyze
+<ul>
+<li>z-scores obtained from comparing treated vs. control samples</li>
+</ul>
+Please note: to calculate the JG statistic, please provide scores that are centered on zero and (at least approximately) follow a normal distribution, e.g. z-scores, t-statistic, etc.

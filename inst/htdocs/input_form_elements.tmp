@@ -1,0 +1,8 @@
+name=input_form
+	name="inputType" value="Profile" / "GeneSet" / "SignedGeneSet"
+	name="query_data" / "query_data_up" / "query_data_down"
+	name="species" "human" / "mouse"
+	name="idType" "entrez" / "symbol" /"probe"
+	name="platform" hgu133plus2 ...
+	name="selected_cmaps" c("Broad", ...)
+

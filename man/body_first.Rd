@@ -1,0 +1,21 @@
+\name{body_first}
+\alias{body_first}
+\title{Definition of html navigation bar elements}
+\usage{
+  body_first(url.base = NULL)
+}
+\arguments{
+  \item{url.base}{character, path to htdocs directory
+  (optional)}
+}
+\value{
+  Html code as a character string
+}
+\description{
+  Shared html code, constituting the first part of the body
+  section
+}
+\author{
+  Thomas Sandmann
+}
+

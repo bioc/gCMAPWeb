@@ -1,0 +1,37 @@
+\name{conversion_html}
+\alias{conversion_html}
+\title{Identifier conversion html output}
+\usage{
+  conversion_html(df, result.dir, file.name, tmp_filename,
+    url.base = NULL, message = NULL)
+}
+\arguments{
+  \item{df}{data.frame with old / new gene identifiers}
+
+  \item{result.dir}{character, path to result directory}
+
+  \item{file.name}{character, output filename}
+
+  \item{tmp_filename}{character, name of the
+  session-specific subdirectory}
+
+  \item{url.base}{character, path to htdocs directory
+  (optional)}
+
+  \item{message}{character, optional message to display
+  above the result table}
+}
+\value{
+  character, name of the output html file
+}
+\description{
+  This function formats a data.frame with the results of
+  the gene identifier conversion to html code, including an
+  interactive dataTable. The html page is saved to disk and
+  the path to the output file is returned as a character
+  string.
+}
+\author{
+  Thomas Sandmann
+}
+

@@ -1,0 +1,22 @@
+\name{platform_radio_html}
+\alias{platform_radio_html}
+\title{Html code for platform radio button selectors}
+\usage{
+  platform_radio_html(conf_data)
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  Html code as character string.
+}
+\description{
+  This function generates the html code required to display
+  radio buttons for all array platforms specified in the
+  gCMAPWeb configuration file
+}
+\author{
+  Thomas Sandmann
+}
+

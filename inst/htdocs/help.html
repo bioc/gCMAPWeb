@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='css/bootstrap.cerulean.min.css' rel='stylesheet'>
+<style>
+body {
+padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+</style>
+<link href='css/bootstrap-responsive.min.css' rel='stylesheet'>
+<link href='css/DT_bootstrap.css' rel='stylesheet'>
+<!--[if lt IE 9]>
+<script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script>
+<![endif]-->
+</head>
+
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <!-- customized site title -->
+        <a class='brand'>
+        gCMAP Help
+		</a>
+        <div class="nav-collapse collapse pull-right">
+          <ul class="nav">
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+  <div class="container">
+
+<div class="span8">
+<h2>Introduction</h2>
+
+<p align="justify">Global expression profiling experiments using microarray or next-generation sequencing technology are routinely used to record how cells or tissues respond to experimental perturbations. Many perturbations, e.g. drug treatments or genetic modifications, cause characteristic changes in gene expression - a <em>fingerprint</em> often recognizable across different laboratories and model systems <a href="http://www.sciencemag.org/content/313/5795/1929.short">(Lamb et al, 2006)</a>. </p>
+
+<p align="justify">Identifying different perturbations that share a similar fingerprint can reveal functional connections between drugs, genes and diseases. Starting with your set of gene identifiers or a complete set of scores from your differential gene expression experiment, the <strong>gCMAP</strong> tool searches one or many reference databases for other experiments showing similar changes in gene expression. Start building your own connectivity map today !</p>
+
+<h2 id="query_types">1. Query types</h2>
+
+<p>The gCMAP tool supports three types of queries:</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/index.png" alt="" title=""></p>
+</div>
+<h3 id="directional_query_type">1.1 Directional queries</h3>
+
+<p align="justify">For this query, you need a <strong>set of gene identifiers</strong>, e.g. Entrez identifiers or gene symbols - and you need which genes are expected to change their expression in the same directions. For example, you may know that one set of genes is up-regulated in response to your perturbation of interest, while another set of genes is down-regulated instead.</p>
+
+<p>The <strong>gCMAP</strong> tool can leverage this information to find experiments, in which
+  - a significant proportion of these genes was also differentially regulated
+  - in the same (correlated) or opposite (anti-correlated) directions as your query.</p>
+
+<ul align="justify">
+<li style="margin-bottom:10px"><p>You only know about up- regulated genes ? Simply leave the text input field for down-regulated genes empty.</p></li>
+<li style="margin-bottom:10px"><p>You know that your genes changes consistently into the same direction, but are not sure if they go up or down ? Never mind, just paste all of them either into the up- or down-regulated text field (but not both). The <strong>gCMAP</strong> tool will report experiments with significant changes in either direction and indicate whether the direction was the same (<em>correlated</em>) or opposite (<em>anti-correlated</em>) with your choice.</p></li>
+</ul>
+
+<h3 id="non_directional_query_type">1.2 Non-directional queries</h3>
+
+<p align="justify">If you have a set of gene identifiers that may show mixed expression changes, in other words some may be up- some down-regulated, this query is for you. The <em>gCMAP</em> tool won't make any assumptions about the direction of expression change and will retrieve all experiments, in which a significant fraction of your genes of interest showed differential expression either way.</p>
+
+<h3 id="profile_query_type">1.3 Profile queries</h3>
+
+<p align="justify">If you have done your own differential gene expression analysis or have access to the complete results from a published study, you can provide the <strong>gCMAP</strong> tool with the complete list of differential expression scores (e.g. z-scores). For this query, you every row needs to contain two pieces of information:</p>
+
+<ul align="justify">
+<li style="margin-bottom:10px">a gene identifier</li>
+<li style="margin-bottom:10px">the associated differential gene expression score for this gene</li>
+</ul>
+
+<h2 id="query_submission" >2. Query submission</h2>
+
+<h3 id="directional_query_submission">2.1 Submitting a directional query</h3>
+
+<p align="justify">If you want to submit a <a href="#directional_query_type">directional gene expression query</a>, e.g. two sets of gene identifiers - one with up- and one with down-regulated genes, you need to provide the following pieces of information.</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/signed_input.png" alt="" title=""></p>
+</div>
+<br><ol align="justify">
+<li style="margin-bottom:10px">A list of up-regulated gene identifiers. If none of the genes are up-regulated just leave this section blank. You can either paste the identifiers directly in to the box (separated by commas or semicolons) or upload a plain text file containing the identifiers (separated by commas, semicolons or tab-stops).</li>
+<li style="margin-bottom:10px">Your list of down-regulated gene identifiers. Again, if you don't know any, just leave this section empty</li>
+<li style="margin-bottom:10px">To make sure the <strong>gCMAP</strong> tool correctly understands your query, please identify the species the gene identifiers refer to.</li>
+<li style="margin-bottom:10px">What kind of identifier are you providing ? If you use microarray probe ids, the <strong>gCMAP</strong> tool will also prompt you to specify the array platform.</li>
+<li style="margin-bottom:10px">Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.</li>
+<li style="margin-bottom:10px">Happy with your choices ? Great, go ahead and submit your query !</li>
+</ol>
+
+<p align="justify">Hint: The <strong>More info</strong> button provides additional information and points out references for the gene-set enrichment method used by the <strong>gCMAP</strong> tool uses for this query.</p>
+
+<h3 id="non_directional_query_submission">2.2 Submitting a non-directional query</h3>
+
+<p align="justify">A <a href="#non_directional_query_type">non-directional query</a> is a good choice if you have a mixed bag of gene identifiers, some of which may by up- some down-regulated. (But hey, why not give the <a href="#directional_query_type">directional query</a> a try as well ? Just in case there are experiments, in which they all change consistently in one or the other direction.)</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/unsigned_input.png" alt="" title=""></p>
+</div>
+<p>Please provide the following pieces of information:</p>
+
+<br><ol align="justify">
+<li style="margin-bottom:10px">A list of at least two gene identifiers (direction of expression change unknown).</li>
+<li style="margin-bottom:10px">To make sure the <strong>gCMAP</strong> tool correctly understands your query, please identify the species the gene identifiers refer to.</li>
+<li style="margin-bottom:10px">What kind of identifier are you providing ? If you use microarray probe ids, the <strong>gCMAP</strong> tool will also prompt you to specify the array platform.</li>
+<li style="margin-bottom:10px">Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.</li>
+<li style="margin-bottom:10px">Happy with your choices ? Great, go ahead and submit your query !</li>
+</ol>
+
+<p align="justify">The <strong>More info</strong> button provides additional information and references about gCMAP's gene-set enrichment method</p>
+
+<h3 id="profile_query_submission">2.3 Submitting a profile query</h3>
+
+<p align="justify">You have a complete set of global differential gene expression scorse ? Great, go ahead and run a <a href="#profile_query_type">profile query</a> by pasting them into box number 1 - or uploading them in a plain text file.</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/profile_input.png" alt="" title=""></p>
+</div>
+<br><ol align="justify">
+<li style="margin-bottom:10px">Gene identifiers and differential gene expression scores. You need one row for each gene, each containing the gene identifier and the differential gene expression score (e.g. z-score) separated by a comma, a semicolon or a tab-stop.</li>
+<li style="margin-bottom:10px">To make sure the <strong>gCMAP</strong> tool correctly understands your query, please identify the species the gene identifiers refer to.3.  What kind of identifier are you providing ? If you use microarray probe ids, the <strong>gCMAP</strong> tool will also prompt you to specify the array platform.</li>
+<li style="margin-bottom:10px">Which reference database would you like to query ? You can see additional information about each dataset when you hover the mouse above each choice. Please choose one or more references - each of them will be queried separately.</li>
+<li style="margin-bottom:10px">Happy with your choices ? Great, go ahead and submit your query !</li>
+</ol>
+
+<p>The <strong>More info</strong> button provides additional information and references about gCMAP's gene-set enrichment method</p>
+
+<h2 id="results">3. Results</h2>
+
+<h3 id="gene_set_results">3.1 Gene-set level results</h3>
+
+<p align="justify">Once you submitted your query, the <strong>gCMAP</strong> tool will search all selected databases for significantly similar experiments. The first result page will present your with a list of the most significant reference datasets matching your query. You will receive a separate panel with results for each searched reference database.</p>
+<p>Each panel contains the following elements:</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/set_level_results.png" alt="" title=""></p>
+</div>
+<br><ol align="justify">
+<li style="margin-bottom:10px"><p>This plot gives you a high-level overview of the <strong>gCMAP</strong> results. The <strong><font color="grey">grey</strong></font> density plot summarizes the scores for all experiments in this reference dataset - similar or not. In this example (and most likely for your query as well) the majority of experiments is not very similar at all and receives a score around zero. For reference, the normal distribution is shown as a dashed line. </p>
+
+<p align="justify">Few scores obtain very high or very low scores - they are highlighted as <strong><font color="green">green</font></strong> and <strong><font color="blue">blue</font></strong> dashes at the bottom of the plot, respectively, if their score is >  3 or &lt; -3. The gene set scores are also shown in rank-ordered form on the right, providing a quick overview of the fraction of gene sets with significant similarity. High scores are shown at the top (<strong><font color="green">green</font></strong>) and low scores at the bottom (<strong><font color="blue">blue</font></strong>)In this example, only few experiments received high scores (<strong><font color="green">green</font></strong>), indicating expression changes in the same direction as in the query, but a large number of experiments showed consistent changes of the query genes in the opposite direction (<strong><font color="blue">blue</font></strong>) than specified in your query.</p></li>
+<li style="margin-bottom:10px"><p>If the reference dataset contains quantitative information, a clustered heatmap of will be generated. Every row corresponds to an experiment in the reference database and every column corresponds to a query gene. The differential gene expression scores are indicated in color, ranging from <strong><font color="blue">blue</font></strong> (down-regulated) to <strong><font color="red">red</font></strong> (up-regulated). For a directional query, the gene identifiers submitted as up- and down-regulated are kept separate and the groups are indicated as <strong><font color="black">black</font></strong> (query genes submitted as down-regulated) and <strong><font color="grey">grey</font></strong> (query genes submitted as up-regulated) lines above the columns. <br>Gene sets are clustered hierarchically using a euclidian distance matrix. To identify the gene set corresponding to a branch in the dendrogram, either click on the figure to enlarge it or refer to the table below. The first column, <i>branch</i>, provides the position of the gene set in the dendrogram, with <i>1</i> corresponding to the top branch.</p></li>
+<li style="margin-bottom:10px">Click the <strong>Legend</strong> button to see additional information about the score columns shown in the table below.</li>
+<li style="margin-bottom:10px">Result table with one row per significant gene set, sorted by false-discovery rate (FDR). By default, only the top 50 most significant gene sets are included.<br>
+To see the full results for this gene set, click on the number reported in the <strong>nFound</strong> column, highlighting the number of genes shared between your query and the reference gene-set.</li>
+<li style="margin-bottom:10px">At the bottom of the page, you can find links to download
+<ul align="justify">
+<li style="margin-bottom:10px">the result table in tab-delimited format</li>
+<li style="margin-bottom:10px">the complete html report, including all plots and gene-level pages as a zip-compressed archive.</li>
+</ul></li>
+</ol>
+
+<h3 id="gene_results">3.2 Gene level results</h3>
+
+<p align="justify">Once you have identified a reference experiment that is significantly similar to your query, you can inspect the <strong>details of for individual reference datasets at the gene level</strong>.</p>
+
+<p align="justify">When you click on the <strong>nFound</strong> column in the <a href="#gene_set_results">main result table</a>,  highlighting the number of genes shared between your query and the reference gene-set, you will be presented with the gene-level results.</p>
+<p>Depending on your query type, the results will be presented in slightly different formats.</p>
+
+<h4 id="gene_set_results_signed">3.2.1 Results for a directional query</h4>
+
+<p align="justify">For directional queries, the gene-level report will display the distribution of scores in a density plot. The plot may look similar to that shown on the <a href="#gene_set_results">main result page</a> - but it contains very different data !<br>While the former displayed one similiarity score for each reference dataset, <strong>this plot shows the differential gene expression scores your individual query genes received in this reference experiment </strong>.</p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/gene_level_results_signed.png" alt="" title=""></p>
+</div>
+
+<br><ol align="justify">
+<li style="margin-bottom:10px">
+<p align="justify">At the top, the <strong><font color="grey">grey</strong></font> density shows the differential expression scores for all genes in this experiment, up-regulated genes have high scores, down-regulated genes have low scores and unchanged genes have scores around zero.</p>
+
+<p align="justify">The <strong><font color="blue">blue</font></strong> and <strong><font color="green">green lines</strong></font> highlight the differential expression scores your query genes obtained in this experiment. The scores for your up-regulated genes are shown in <strong><font color="green">green</font></strong>, those you labeled down-regulated are shown in <strong><font color="blue">blue</font></strong>. <p>In the rug at the bottom of the plot, the scores of individual query genes are indicated, with colors matching those of the distributions show above.</p>
+<p>In the example shown above, most of the genes expected to be up-regulated (<strong><font color="green">green</font></strong>) received scores > 0, while most of the genes expected to be down-regulated (<strong><font color="blue">blue</font></strong>) received scores < 0: The expression of the query genes in this reference experiment is therefore <strong>correlated</strong> with the original observations.</p></li>
+
+<li style="margin-bottom:10px"><p>Below the plot, the individual results for all query genes found in this experiment are tabulated.</p></li>
+</ol>
+<br>
+<h4 id="gene_set_results_unsigned">3.2.2 Results for a non-directional query</h4>
+
+<p align="justify"><strong>gCMAP</strong> can search both databases that provide quantitative experimental results (e.g. z-scores) and resources providing only lists of gene identifiers (e.g. gene sets maintained by the KEGG database). Depending on the information available in the reference, a non-directional query will return gene-level results in one of two formats:</p>
+<br>
+<h4 id="gene_set_results_unsigned_density">Results for datasets providing differential expression scores</h4>
+
+<p align="justify"> If quantitative information is available, a density plot is drawn separately simultaneously displaying the background distribution (scores for all genes in the experiment) and the scores for your query genes.
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/gene_level_results_unsigned.png" alt="" title=""></p>
+</div>
+
+<br><ol align="justify">
+<li style="margin-bottom:10px">
+<p align="justify">At the top, the <strong><font color="grey">grey</strong></font> density shows the differential expression scores for all genes in this experiment. Up-regulated genes have high scores, down-regulated genes have low scores and unchanged genes have scores around zero.</p>
+
+<p align="justify">The <strong>black</strong> line and the rug at the bottom of the plot highlight the differential expression scores your query genes obtained in this experiment. In this example, many of the submitted query genes are up-regulated in the reference experiment: the distribution of scores is markedly shifted to the right. A smaller subset of query genes is down-regulated and shifted to the left (giving rise to a second, minor mode of the density distribution). Submitting a <a href="#non_directional_query_submission">non-directional query</a> is a good choice when the query gene set is heterogeneous, e.g. you are interested in results, in which some of the query genes are up- and other down-regulated, as in this example.</p></li>
+
+<li style="margin-bottom:10px"><p>Below the plot, the individual results for all query genes found in this experiment are tabulated.</p>
+</li>
+</ol>
+<br>
+<h4 id="gene_set_results_unsigned_density">Results for datasets without differential expression scores</h4>
+<br>
+
+<p align="justify">Some reference datasets do not provide gene-level scores. For example, public databases like the <a href="http://www.broadinstitute.org/gsea/msigdb/collections.jsp">MSigDB database</a> list only gene identifiers for many different gene sets. In this case, the <strong>gCMAP</strong> tool identifies reference experiments with significant overlap between query sets and the reference database using a Fisher test.</p>
+<br>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/gene_level_results_pie.png" alt="" title=""></p>
+</div>
+
+<br><ol align="justify">
+<li style="margin-bottom:10px"><p>The <strong>pie chart</strong> shows the fraction of query genes overlapping with the reported reference gene set and also provides information about the absolute number of genes. In this example, the reference gene set contains a total of 239 genes, 9 of which are also part of the submitted query gene set. This is a small, yet significant overlap, given the large number of genes annotated in the reference database.</p></li>
+<li style="margin-bottom:10px"><p>The table below the plot indicates which of your query genes were also found in the reference gene set, and which ones were not.</p></li>
+</ol>
+<br>
+<h4 id="gene_set_results_unsigned">3.3 Results for a profile query</h4>
+<br>
+<p align="justify">Technically, a profile query is the reverse of a directional query: in the former, you provide the global differential gene expression scores and <strong>gCMAP</strong> matches them to the gene identifiers in the reference database. In the latter, you provide a list of gene identifiers and <strong>gCMAP</strong> retrieves the differential expression scores these genes received in many other experiments from its reference database.</p>
+
+<p>The results from a profile query are displayed in a similar fashion as those from a directional query - but the data displayed is not same !<p>
+
+<div name="wrapper" style="width:100%; text-align:center">
+<br><p><img src="img/gene_level_results_profile.png" alt="" title=""></p>
+</div>
+
+
+<ol align="justify">
+<li style="margin-bottom:10px"><p align="justify">In a profile query, <strong>the <strong><font color="grey">grey</strong></font> background density corresponds to your query</strong>, the global differential gene expression scores your provided. In this example, the vast majority of genes known to be down-regulated in the reference dataset (<strong><font color="blue">blue</strong></font>) is also down-regulated in your experiment: the <strong><font color="blue">blue</strong></font> density curve / rug is shifted to the left. Similarly, the genes known to be up-regulated in the reference dataset (<strong><font color="green">green</strong></font>) is also up-regulated in the submitted query: the <strong><font color="green">green</strong></font> density / rug is shifted to the right.</p>
+
+<p>The <strong><font color="green">green</strong></font> and <strong><font color="blue">blue</strong></font> <strong>density curves and the rug highlight your scores for those genes that are part of the reference gene set</strong>, e.g. genes identified to be differentially regulated in the archived experiment.</p>
+</li>
+
+<li style="margin-bottom:10px"><p>The table below lists the individual scores the members of the <strong>gCMAP</strong> reference experiment obtained in your query experiment. <br></p></li>
+</ol>
+<br>
+</div>
+</div>
+
+<!-- Le javascript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/jquery-1.8.2.min.js"><\/script>')
+  </script>
+  
+  <!-- Bootstrap JS, the minified bundle -->
+  <script src="js/bootstrap.min.js"></script>
+
+  <script>$('a[rel="popover"]').popover();</script>
+
+</body>
+</html>	

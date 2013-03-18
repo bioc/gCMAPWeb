@@ -1,0 +1,24 @@
+\name{create_GeneIdentifierType}
+\alias{create_GeneIdentifierType}
+\title{GeneIdentifierType creator}
+\usage{
+  create_GeneIdentifierType(post, conf_data)
+}
+\arguments{
+  \item{post}{list, POST component of the Rook request}
+
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  GeneIdentifierType object
+}
+\description{
+  This function extracts the species or platform
+  information from the POST request and constructs
+  GeneIdentifierType objects
+}
+\author{
+  Thomas Sandmann
+}
+

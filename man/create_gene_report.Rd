@@ -1,0 +1,49 @@
+\name{create_gene_report}
+\alias{create_gene_report}
+\title{This function compiles a gene-level report from a CMAPResults object.}
+\usage{
+  create_gene_report(cmap.result, query, result.dir,
+    url.base, reference.cmap, figure.dir,
+    element = getOption("element", default = "z"),
+    annotation.db = "org.Hs.eg.db",
+    gene.level.plot = getOption("gene.level.plot", default = TRUE))
+}
+\arguments{
+  \item{cmap.result}{a CMAPResults object}
+
+  \item{query}{a GeneSet, SignedGeneSet or ExpressionSet
+  object used as query for the gene-set-enrichment analysis
+  giving rise to 'cmap.result'}
+
+  \item{result.dir}{character, path to gene_results folder
+  in the per-session output directory}
+
+  \item{url.base}{character, the name of the reference
+  database}
+
+  \item{reference.cmap}{eSet, the reference database used
+  for the gCMAP analysis}
+
+  \item{figure.dir}{character, path to figure folder in the
+  per-session output directory}
+
+  \item{element}{character, the assayDataElementName to
+  extract from NChannelSet objects}
+
+  \item{annotation.db}{character, the name of the
+  annotation package used to lookup gene identifiers}
+
+  \item{gene.level.plot,}{logical: should gene-level plots
+  be included in the report ?}
+}
+\value{
+  character string with the relative url to the report
+  html, which is directly written to disk.
+}
+\description{
+  Usually called by the generate_report function
+}
+\author{
+  Thomas Sandmann
+}
+

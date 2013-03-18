@@ -1,0 +1,27 @@
+species:
+  human:
+    annotation: org.Hs.eg
+    platforms:
+     - hgu133a
+    cmaps:
+      cmap1: cmap1
+      cmap2: cmap2
+      cmap3: cmap3
+      cmap5: cmap5
+      
+  mouse:
+    annotation: org.Mm.eg
+    platforms:
+     - mgug4104a
+    cmaps:
+      cmap4: cmap4
+
+inputType:
+  - non-directional
+  - directional
+  - profile
+
+idType:
+  - symbol
+  - entrez
+  - probe

@@ -1,0 +1,23 @@
+\name{create_SignedGeneSet}
+\alias{create_SignedGeneSet}
+\title{SignedGeneSet creator}
+\usage{
+  create_SignedGeneSet(post, conf_data)
+}
+\arguments{
+  \item{post}{list, POST component of the Rook request}
+
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  SignedGeneSet object
+}
+\description{
+  This function creates a SignedGeneSet object from
+  user-specified identifiers.
+}
+\author{
+  Thomas Sandmann
+}
+

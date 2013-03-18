@@ -1,0 +1,26 @@
+\name{parse_textarea_input}
+\alias{parse_textarea_input}
+\title{Textarea parser}
+\usage{
+  parse_textarea_input(textarea.input,
+    regexp = "[+,;\t ]+")
+}
+\arguments{
+  \item{textarea.input}{character, the user-input extracted
+  from the POST request}
+
+  \item{regexp}{character, a regular expression matching
+  all separators used to separate gene identifiers}
+}
+\value{
+  list of character vectors, one element for each original
+  row of textarea.input
+}
+\description{
+  This function parses user-specified data pasted into the
+  textarea fields of the input form
+}
+\author{
+  Thomas Sandmann
+}
+

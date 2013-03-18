@@ -1,0 +1,22 @@
+\name{species_radio_html}
+\alias{species_radio_html}
+\title{Html code for species radio button selectors}
+\usage{
+  species_radio_html(conf_data)
+}
+\arguments{
+  \item{conf_data}{list, the configuration data as returned
+  by the read_config_file function}
+}
+\value{
+  Html code as character string.
+}
+\description{
+  This function generates the html code required to display
+  radio buttons for all species specified in the gCMAPWeb
+  configuration file
+}
+\author{
+  Thomas Sandmann
+}
+

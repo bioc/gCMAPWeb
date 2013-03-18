@@ -1,0 +1,59 @@
+\name{exampleCMAP}
+\alias{exampleCMAP}
+\title{Generate example NChannelSets}
+\usage{
+  exampleCMAP(universe = "org.Hs.eg.db",
+    idType = "ENTREZID", rows = 1000, cols = 20,
+    seed = 123, add = 3)
+}
+\arguments{
+  \item{universe}{character, the name of an available
+  annotation package. Default=org.Hs.eg.db}
+
+  \item{idType}{character, a valid identifier type
+  supported by the selected annotation package.
+  Default=ENTREZID}
+
+  \item{rows}{integer, the number of genes to sample.
+  Default=1000}
+
+  \item{cols}{integer, the number of samples to generate.
+  Default=20}
+
+  \item{seed}{numeric, seed for the random number
+  generator. Default=123}
+
+  \item{add}{numeric, score shift for scores in the first
+  sample column. Scores for genes 1-50 will be shifted up,
+  those for genes 51-100 down.}
+}
+\value{
+  NChannelSet with simulated scores.
+}
+\description{
+  This function generates NChannelSets from randomly
+  selected gene idenfiers and scores. Scores of the first
+  (simulated) sample will be shifted up by the amount
+  specified by the 'add' parameter for the first 50 genes
+  and down by the same amount for genes 51-100.
+}
+\details{
+  This function is mainly intented for testing purposes.
+}
+\examples{
+## generate example NChannelSet with 100 features and 10 columns
+## for human EntrezIds
+if( require( "org.Hs.eg.db", character.only=TRUE)){
+  e <- exampleCMAP( universe="org.Hs.eg.db", rows=100, cols=10)
+  dim( e )
+  head( featureNames( e ))
+  assayDataElementNames( e )
+  ## or gene symbols
+  s <- exampleCMAP( universe="org.Hs.eg.db", idType="SYMBOL")
+  head( featureNames( s ))
+  }
+}
+\author{
+  Thomas Sandmann
+}
+

@@ -1,0 +1,25 @@
+\name{create_gene_table_legend}
+\alias{create_gene_table_legend}
+\title{This function reads an eSet object and returns the html code to display a legend for all columns that have more descriptive annotations in the varMetadata slot.}
+\usage{
+  create_gene_table_legend(col.names, eset)
+}
+\arguments{
+  \item{col.names}{character, a vector with column names
+  that are always included in the legend}
+
+  \item{eset}{eSet object}
+}
+\value{
+  character string with the html code element required to
+  insert the legend into the html report
+}
+\description{
+  This function reads an eSet object and returns the html
+  code to display a legend for all columns that have more
+  descriptive annotations in the varMetadata slot.
+}
+\author{
+  Thomas Sandmann
+}
+

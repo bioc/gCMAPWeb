@@ -142,8 +142,8 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
           if( class( query ) %in% c("GeneSet", "SignedGeneSet")){
             
             scores <- t( sapply( gene.level.reports, function(x){
-              if( "Diff. expr. score" %in% colnames( x$gene.table )){
-                as.numeric( x$gene.table[,"Diff. expr. score"])
+              if( element %in% colnames( x$gene.table )){
+                as.numeric( x$gene.table[, element])
               } else {
                 NULL
               }

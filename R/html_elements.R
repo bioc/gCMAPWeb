@@ -665,7 +665,7 @@ index_text <- function(text=getOption( "index.text", default="Compare your favor
 ##' @author Thomas Sandmann
 index_message <- function(text=getOption( "index.message", default=NULL)){
   if(! is.null( text)){
-    cat( sprintf("<div class='alert alert-error span8'>%s</div>", text))
+    cat( sprintf("<div class='alert alert-info span8'>%s</div>", text))
   }
 }
 

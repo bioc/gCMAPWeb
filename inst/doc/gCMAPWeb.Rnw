@@ -40,6 +40,9 @@
 \SweaveOpts{concordance=TRUE}
 \input{gCMAPWeb-concordance}
 
+This document provides technical detail on the use of the \Rpackage{gCMAPWeb} package, including a short description of input and output data and the configuration of the web application. For expanded examples using real biological datasets available from public databases, please refer to the \textit{tutorial} vignette instead.
+
+
 \maketitle
 \tableofcontents
 \newpage

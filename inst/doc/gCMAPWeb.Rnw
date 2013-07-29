@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{main}
+% \VignetteIndexEntry{gCMAPWeb configuration}
 % \VignetteDepends{}
 % \VignetteKeywords{gCMAPWeb}
 % \VignettePackage{gCMAPWeb}

@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{main}
+% \VignetteIndexEntry{Recreating the Broad Connectivity Map v1}
 % \VignetteDepends{}
 % \VignetteKeywords{gCMAPWeb}
 % \VignettePackage{gCMAPWeb}

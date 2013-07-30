@@ -39,11 +39,11 @@
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \input{gCMAPWeb-concordance}
+\maketitle
 
 This document provides technical detail on the use of the \Rpackage{gCMAPWeb} package, including a short description of input and output data and the configuration of the web application. For expanded examples using real biological datasets available from public databases, please refer to the \textit{tutorial} vignette instead.
 
 
-\maketitle
 \tableofcontents
 \newpage
 
@@ -165,7 +165,7 @@ This section will take you through the steps necessary to search your own datase
 \subsection*{Reference datasets}
 %%%%%
 
-\Rpackage{gCMAPWeb} can query either quantitative differential expression data, e.g. z-scores, stored in \Robject{NChannelSet} objects, or gene-set collections provided as \Robject{CMAPCollection} objects. To avoid reading large datasets fully in to memory, \Rpackage{gCMAPWeb} can take advantage of the \Rpackage{bigmemory} package to retrieve only the required data from a binary file stored on disk.
+\Rpackage{gCMAPWeb} can query either quantitative differential expression data, e.g. z-scores, stored in \Robject{NChannelSet} objects, or gene-set collections provided as \Robject{CMAPCollection} objects. To avoid reading large datasets fully in to memory, \Rpackage{gCMAPWeb} can take advantage of the \Rpackage{bigmemory} and \Rpackage{bigmemoryExtras} packages to retrieve only the required data from a binary file stored on disk. Note: At the time or writing these two packages were only available for Unix and Mac OS X but not Windows operating systems.
 
 All reference datasets must be provided with \textbf{Entrez gene identifiers}. 
 If available, information from the \tt abstract \rm, \tt title \rm slots will be used for labels and pop-over help on the submission page (see figure ~\ref{fig:esetSlots}). 

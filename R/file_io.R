@@ -150,9 +150,11 @@ load_cmaps <- function( conf_data, min.set.size=getOption( "min.set.size", defau
     return( eset )
   })
   
-  ## attach all BigMatrix assayDataElements
   for( n in 1:length( cmaps.all ) ){
-    attachAssayDataElements( assayData( cmaps.all[[n]] ))
+    ## attach all BigMatrix assayDataElements
+    if( suppressWarnings(require("bigmemoryExtras", quietly=TRUE, character.only=TRUE))){
+        attachAssayDataElements( assayData( cmaps.all[[n]] ))
+    }
     if( inherits( cmaps.all[[n]], "CMAPCollection")){
       cmaps.all[[n]] <-minSetSize( cmaps.all[[n]], min.members=min.set.size)
     }

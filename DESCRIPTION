@@ -1,7 +1,7 @@
 Package: gCMAPWeb
 Type: Package
 Title: A web interface for gene-set enrichment analyses
-Version: 1.1.2
+Version: 1.1.3
 Author: Thomas Sandmann
 Maintainer: Thomas Sandmann <sandmann.thomas@gene.com>
 Description: The gCMAPWeb R package provides a graphical user interface for the
@@ -27,11 +27,11 @@ Description: The gCMAPWeb R package provides a graphical user interface for the
     identified and reported in graphical and tabular form.
 License: Artistic-2.0
 Depends: brew, gCMAP (>= 1.3.0), R (>= 2.15.0), yaml
-Imports: Biobase, annotate, AnnotationDbi, bigmemory, bigmemoryExtras,
+Imports: Biobase, annotate, AnnotationDbi,
         BiocGenerics, brew, graphics, grDevices, GSEABase, hwriter,
         IRanges, methods, parallel, Rook, stats, utils
 Suggests: org.Hs.eg.db, org.Mm.eg.db, ArrayExpress, affy, hgfocus.db,
-        ArrayExpress, hgu133a.db, mgug4104a.db, RUnit
+        ArrayExpress, hgu133a.db, mgug4104a.db, RUnit, bigmemory, bigmemoryExtras
 biocViews: Bioinformatics, GUI, GeneSetEnrichment, Visualization
 LazyLoad: yes
 Packaged: 2013-03-17 18:59:51 UTC; sandmat1

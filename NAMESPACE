@@ -8,7 +8,7 @@ importClassesFrom(methods, character)
 
 importMethodsFrom(AnnotationDbi, keys, sample)
 
-importMethodsFrom(bigmemory, ncol, nrow, print)
+## importMethodsFrom(bigmemory, ncol, nrow, print)
 
 importMethodsFrom(Biobase, abstract, assayData, content,
                   experimentData, ExpressionSet, exprs, featureNames,
@@ -36,7 +36,7 @@ importFrom(Rook, Brewery, Builder, Redirect, Rhttpd, Static)
 
 importFrom(annotate, getAnnMap)
 
-importFrom(bigmemoryExtras, attachAssayDataElements)
+## importFrom(bigmemoryExtras, attachAssayDataElements)
 
 importFrom(Biobase, assayDataElement, assayDataElementNames)
 

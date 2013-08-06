@@ -383,7 +383,7 @@ test_generate_report <- function(){
       annotation.db="org.Hs.eg.db",
       element="z", 
       query=query, 
-      tmp_filename=tempdir()
+      tmp_filename="tmp_filename"
     )
     checkTrue( class( report ) == "list", "did not return a list.")
     checkTrue( length( report ) == 11, "did not return a list with 11 elements.")

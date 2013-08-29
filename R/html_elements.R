@@ -623,6 +623,16 @@ body_first <- function(url.base=NULL){
       "</div>",
       "</div>",
       "</div>",
+      "<noscript>",
+      "<style type=\"text/css\">",
+      ".container{display:none;}",
+      "</style>",
+      "<div class=\"hero-unit\">",
+      "<p class=\"text-warning\">",
+      "Please enable javascript in your browser to use gCMAP",
+      "</p>",
+      "</div>",
+      "</noscript>",
       "<div class=\"container\">",
       sep="\n"
   )

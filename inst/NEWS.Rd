@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.1.6}{
+  \itemize{
+  \item{UPDATE}{gCMAPWeb now issues an error when javascript is not available in the browser.}
+}
+}
+
 \section{Changes in version 1.1.2}{
   \itemize{
  \item{NEW: }{Added tutorial as a new vignette.}

@@ -8,7 +8,16 @@
 ##' @author Thomas Sandmann
 html_table <- function( df, table_id){
   
+  StringCheck <- function(x){
+    valid.string <- try( parse( text=as.character(x)), silent = TRUE)
+    ifelse( inherits( valid.string, "try-error"), FALSE, TRUE)
+  }
+
   NumCheck <- function(x){
+    ## check for valid strings first, to deal with invalid multibyte strings
+    if( ! suppressWarnings( StringCheck( x ))){
+      return( FALSE )
+    }
     Result <- suppressWarnings(as.numeric(as.character(x)))
     if (any(!is.na(Result))) TRUE else FALSE
   }

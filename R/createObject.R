@@ -275,13 +275,8 @@ entrez_GeneSets <- function( gs ){
 ##' @author Thomas Sandmann
 stripPrefix <- function( ids, prefix=c("^GeneID:", "^GeneID")){
   id.names <- names( ids )
-  for( pattern in prefix){
-    ids <- sapply( ids, function( x ){
-      sub( pattern, "", x)
-    })
-  }
-  names( ids ) <- id.names
-  return( ids )
+  prefix <-  paste( prefix, collapse="|")
+  return( setNames( sub( prefix, "", as.character( ids )), id.names) )
 }
 
 ##' This function creates a GeneSet object from user-specified identifiers

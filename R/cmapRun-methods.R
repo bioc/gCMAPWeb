@@ -159,17 +159,17 @@ setMethod(
 setMethod(
   "cmapRun",
   signature( user.input="eSet", cmap= "eSet" ),
-  function( user.input, cmap, lower=getOption( "lower.threshold", default="-3"), higher=getOption( "higher.threshold", default="3"), element=getOption( "element", default="z")) {
+  function( user.input, cmap, lower=getOption( "lower.threshold", default=-3), higher=getOption( "higher.threshold", default=3), element=getOption( "element", default="z")) {
     
     ## two-class comparisons are not supported, yet
     stopifnot( ncol(user.input) == 1)
     
     ## induce signed sets from the reference datasets
-    cmap <- induceCMAPCollection( cmap, lower=lower, higher=higher, element=element )
-    cmap <- cmap[, Matrix::colSums( abs( members( cmap))) > 0 ] ## remove empty sets
-    if( ncol(cmap) == 0){
+    cmap.collection <- induceCMAPCollection( cmap, lower=lower, higher=higher, element=element )
+    cmap.collection <- cmap.collection[, setSizes(cmap.collection)$n.total != 0 ] ## remove empty sets
+    if( ncol(cmap.collection) == 0){
       stop("None of the genes in the reference dataset passed the score cutoff to induce gene sets.")
     }
-    cmapRun(user.input, cmap)
+    cmapRun(user.input, cmap.collection)
   }
 )

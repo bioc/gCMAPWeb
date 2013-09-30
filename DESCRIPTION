@@ -1,7 +1,7 @@
 Package: gCMAPWeb
 Type: Package
 Title: A web interface for gene-set enrichment analyses
-Version: 1.1.6
+Version: 1.1.7
 Author: Thomas Sandmann
 Maintainer: Thomas Sandmann <sandmann.thomas@gene.com>
 Description: The gCMAPWeb R package provides a graphical user interface for the

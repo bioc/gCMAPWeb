@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.1.7}{
+  \itemize{
+  \item{BUGFIX}{Fixed memory leak and enabled html_table function to deal with multibyte strings.}
+}
+}
+
 \section{Changes in version 1.1.6}{
   \itemize{
   \item{UPDATE}{gCMAPWeb now issues an error when javascript is not available in the browser.}

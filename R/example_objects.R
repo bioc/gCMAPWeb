@@ -59,7 +59,7 @@ exampleCMAP <- function( universe="org.Hs.eg.db", idType="ENTREZID", rows=1000, 
   )
   
   annotation( obj) <- sub( ".db$", "", universe)
-  pData( obj ) <- data.frame( Name=sampleNames(obj), row.names=sampleNames(obj) )
+  pData( obj ) <- data.frame( Name=sampleNames(obj), row.names=sampleNames(obj), stringsAsFactors=FALSE )
   return( obj )
 }
 
@@ -119,7 +119,7 @@ examplePost <- function( cmap, inputType="non-directional", species="human", arr
       query_data = ids
     )
   } else if( inputType == "profile") {
-    dat <- data.frame( Id=featureNames( cmap ), Profile=rnorm( rows ) )
+    dat <- data.frame( Id=featureNames( cmap ), Profile=rnorm( rows ), stringsAsFactors=FALSE )
     dat[ 1:50, "Profile"]  <- dat[ 1:50,"Profile"] + add
     dat[ 51:100, "Profile"] <- dat[ 51:100,"Profile"] - add
     post <- list(

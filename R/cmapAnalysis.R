@@ -25,7 +25,7 @@ cmapAnalysis <- function( req, conf_data, reference.cmaps, element=getOption( "e
   if( getOption( "save.intermediates", default = FALSE) == TRUE){
     save(post, file=file.path(tempdir(),"post.rdata"))
   }
-  
+
   ## construct query objects from post data
   obj <- create_query_objects( post, conf_data )
   query <- obj$query

@@ -1,6 +1,11 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.0.3}{
+\itemize{
+ \item{BUGFIX: }{Fixed memory leak and enabled html_table function to deal with multibyte strings.}
+}
+}
 \section{Changes in version 1.0.2}{
 \itemize{
  \item{IMPROVED: }{Additional documentation added: tutorial.pdf.}

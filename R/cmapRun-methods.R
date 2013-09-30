@@ -74,8 +74,8 @@ setMethod(
     ## run scoring method
     res <- fisher_score(user.input, cmap, universe=universe, keep.scores=TRUE)
     varMetadata( res )["nFound","labelDescription"] <- sprintf( "Number of query genes with significant differential expression scores ( < %s or > %s ) in this reference experiment.",
-                                                                getOption( "lower.threshold", default="-3"),
-                                                                getOption( "higher.threshold", default="3")
+                                                                getOption( "lower.threshold", default=-3),
+                                                                getOption( "higher.threshold", default=3)
     )
     res <- res[ res@data$nSet <= getOption( "max.set.size", default=Inf), ]
     return(res)
@@ -145,7 +145,6 @@ setMethod(
   "cmapRun",
   signature( user.input="eSet", cmap= "CMAPCollection" ),
   function(user.input, cmap, element=getOption( "element", default="z")) {
-    
     stopifnot( ncol(user.input) == 1)## two-class comparisons are not supported, yet
     out <- gsealm_jg_score(user.input, cmap, element="exprs", keep.scores=TRUE)
     varMetadata( out )["nFound","labelDescription"] <- "Total number of query genes for which expression scores are available in this reference experiment (up-, down- or unchanged)."
@@ -159,17 +158,20 @@ setMethod(
 setMethod(
   "cmapRun",
   signature( user.input="eSet", cmap= "eSet" ),
-  function( user.input, cmap, lower=getOption( "lower.threshold", default="-3"), higher=getOption( "higher.threshold", default="3"), element=getOption( "element", default="z")) {
+  function( user.input, cmap, 
+            lower=getOption( "lower.threshold", default=-3), 
+            higher=getOption( "higher.threshold", default=3), 
+            element=getOption( "element", default="z")) {
     
     ## two-class comparisons are not supported, yet
     stopifnot( ncol(user.input) == 1)
-    
+
     ## induce signed sets from the reference datasets
-    cmap <- induceCMAPCollection( cmap, lower=lower, higher=higher, element=element )
-    cmap <- cmap[, Matrix::colSums( abs( members( cmap))) > 0 ] ## remove empty sets
-    if( ncol(cmap) == 0){
+    cmap.collection <- induceCMAPCollection( cmap, lower=lower, higher=higher, element=element )
+    cmap.collection <- cmap.collection[, setSizes(cmap.collection)$n.total != 0 ] ## remove empty sets
+    if( ncol(cmap.collection) == 0){
       stop("None of the genes in the reference dataset passed the score cutoff to induce gene sets.")
     }
-    cmapRun(user.input, cmap)
+    cmapRun(user.input, cmap.collection)
   }
 )

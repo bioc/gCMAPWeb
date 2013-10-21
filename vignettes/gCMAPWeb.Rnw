@@ -128,7 +128,7 @@ Once you submitted your query, the gCMAP tool will search all selected databases
 
 \begin{figure}[thb]
    \centering
-   \includegraphics[width=0.7\textwidth]{../extdata/setLevelPlot.png}
+   \includegraphics[width=0.7\textwidth]{setLevelPlot.png}
    \caption{Example of a \textbf{gene-set score} density plot, as found on the main gCMAPWeb result page. The grey density plot summarizes the scores for all experiments in this reference dataset - similar or not. For reference, the normal distribution is shown as a dashed line. Reference instances with similarity scores \textgreater 3 (correlated experiments) or \textless -3 (anti-correlated experiments) are indicated in the rug plot. On the right, the same similarity scores are shown as an ordered heatmap. High scores are shown at the top (green) and low scores at the bottom (blue). }
   \label{fig:setLevelPlot}
 \end{figure}
@@ -141,7 +141,7 @@ In this example, only few experiments received high scores (green), indicating e
 
 \begin{figure}[thb]
    \centering
-   \includegraphics[width=0.7\textwidth]{../extdata/geneLevelPlot.png}
+   \includegraphics[width=0.7\textwidth]{geneLevelPlot.png}
    \caption{Example of a \textbf{gene score} density plot. The grey density plot summarizes the scores for all genes assayed in this reference dataset. For reference, the normal distribution is shown as a dashed line. The distribution of query genes submitted as "up-regulated" is shown in green, that of "down-regulated" query genes is shown in blue. (For non-directional queries, a single query gene density is shown in black.) Query gene scores are also indicated in the rug plot following the same color scheme as outlined above.
    In this example, an \textbf{anti-correlated result} is shown: query genes submitted as "up-regulated" (green) are shifted toward negative scores, while "down-regulated" query genes are shifted to positive scores.}
    \label{fig:geneLevelPlot}
@@ -262,7 +262,7 @@ The configuration file provides all required information to start a \Rpackage{gC
 
 \begin{figure}[thb]
    \centering
-   \includegraphics[width=0.7\textwidth]{../extdata/esetSlots.png}
+   \includegraphics[width=0.7\textwidth]{esetSlots.png}
    \caption{Reference dataset information}
    \label{fig:esetSlots}
 \end{figure}
@@ -331,7 +331,7 @@ show.heatmap
 
 \begin{figure}[thb]
    \centering
-   \includegraphics[width=0.7\textwidth]{../extdata/indexOptions.png}
+   \includegraphics[width=0.7\textwidth]{indexOptions.png}
    \caption{Options available to customize the index page}
    \label{fig:indexOptions}
 \end{figure}
@@ -354,7 +354,7 @@ The following options specify which gene identifiers are pasted into the submiss
 
 \begin{figure}[thb]
    \centering
-   \includegraphics[width=0.7\textwidth]{../extdata/exampleQuery.png}
+   \includegraphics[width=0.7\textwidth]{exampleQuery.png}
    \caption{Options populating the Example query button on the directional query submission page.}
    \label{fig:exampleQuery}
 \end{figure}

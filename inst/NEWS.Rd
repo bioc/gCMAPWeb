@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.3.2}{
+  \itemize{
+  \item{BUGFIX}{Moved the 'Rook' package from 'Imports' to 'Depends'}
+}
+}
+
 \section{Changes in version 1.3.1}{
   \itemize{
   \item{CHANGE}{Vignettes are now stored in vignettes directory.}

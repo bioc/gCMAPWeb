@@ -26,10 +26,10 @@ Description: The gCMAPWeb R package provides a graphical user interface for the
     query submission, significantly similar reference datasets will be
     identified and reported in graphical and tabular form.
 License: Artistic-2.0
-Depends: brew, gCMAP (>= 1.3.0), R (>= 2.15.0), yaml
+Depends: brew, gCMAP (>= 1.3.0), R (>= 2.15.0), yaml, Rook
 Imports: Biobase, annotate, AnnotationDbi,
         BiocGenerics, brew, graphics, grDevices, GSEABase, hwriter,
-        IRanges, methods, parallel, Rook, stats, utils
+        IRanges, methods, parallel, stats, utils
 Suggests: org.Hs.eg.db, org.Mm.eg.db, ArrayExpress, affy, hgfocus.db,
         ArrayExpress, hgu133a.db, mgug4104a.db, RUnit
 Enhances: bigmemory, bigmemoryExtras

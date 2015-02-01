@@ -6,7 +6,14 @@
 ##' @param cmaps.concatenated.by character, specifying the separator (e.g. semicolon, comma) used to concatenate multiple requested reference databases
 ##' @return Logical, TRUE if all required fields could be validated, FALSE otherwise
 ##' @author Thomas Sandmann
-validate_request <- function( req, conf_data, cmaps.concatenated.by=getOption( "cmaps.concatenated.by", default=",") ){
+validate_request <- function(
+  req,
+  conf_data,
+  cmaps.concatenated.by=getOption(
+    "cmaps.concatenated.by",
+    default=","
+    )
+  ){
   ## extract payload
   request <- req$params()
   
@@ -118,16 +125,6 @@ parse_request <- function( request, conf_data, cmaps.concatenated.by=getOption( 
   return( post )
 }
 
-##' Function to trim leading / tailing characters
-##'
-##' @title Function to trim leading / tailing whitespace characters
-##' @param x character
-##' @return character
-##' @author Thomas Sandmann
-trim <- function (x) {
-  gsub("^\\s+|\\s+$", "", x)
-}
-
 ##' This functions parses the user-uploaded files
 ##'
 ##' @title Uploaded file parser
@@ -158,6 +155,10 @@ parse_file_input <- function( temp.file, regexp="[+,;\t ]+", n.score.col=1 ){
 ##' @return list of character vectors, one element for each original row of textarea.input
 ##' @author Thomas Sandmann
 parse_textarea_input <- function( textarea.input, regexp="[+,;\t ]+" ){
+
+  trim <- function (x) {
+    gsub("^\\s+|\\s+$", "", x)
+  }
   post.decoded <- trim( URLdecode( textarea.input ) )
   post.vector <- strsplit(post.decoded, "\r\n", fixed=TRUE)
   input.rows <- lapply(post.vector, strsplit, regexp)[[1]]
@@ -200,6 +201,8 @@ process_score_input <- function( query_data, n.score.col=1 ){ ## ids & scores su
 ##' @param conf_data list, the configuration data as returned by the read_config_file function
 ##' @return one of GeneSet, SignedGeneSet or ExpressionSet
 ##' @author Thomas Sandmann
+##' @importClassesFrom gCMAP SignedGeneSet
+##' @importMethodsFrom GSEABase geneIds
 create_query_objects <- function( post, conf_data ){
   if( post$inputType %in% c("single", "non-directional") ){
     obj <- create_GeneSet( post, conf_data)
@@ -230,6 +233,8 @@ create_query_objects <- function( post, conf_data ){
 ##' @param conf_data  list, the configuration data as returned by the read_config_file function
 ##' @return GeneIdentifierType object
 ##' @author Thomas Sandmann
+##' @importFrom GSEABase SymbolIdentifier EntrezIdentifier AnnotationIdentifier
+##' @importClassesFrom GSEABase GeneSet GeneSetCollection
 create_GeneIdentifierType <- function( post, conf_data ){
   ## extract species or platform annotation package
   ## from post request and construct GeneIdentifierType object
@@ -255,6 +260,7 @@ create_GeneIdentifierType <- function( post, conf_data ){
 ##' @param gs GeneSet or SignedGeneSet
 ##' @return GeneSet or SignedGeneSet
 ##' @author Thomas Sandmann
+##' @importMethodsFrom GSEABase mapIdentifiers
 entrez_GeneSets <- function( gs ){
   entrez.gs <- mapIdentifiers(gs, from=geneIdType( gs), to=EntrezIdentifier())
   n.valid.entrez <- length(geneIds(entrez.gs))
@@ -286,6 +292,8 @@ stripPrefix <- function( ids, prefix=c("^GeneID:", "^GeneID")){
 ##' @param conf_data  list, the configuration data as returned by the read_config_file function
 ##' @return GeneSet object
 ##' @author Thomas Sandmann
+##' @importClassesFrom GSEABase GeneSet
+##' @importMethodsFrom GSEABase geneIdType GeneSet
 create_GeneSet <- function(post, conf_data) {
   
   ## generate GeneIdentifierType object
@@ -323,6 +331,8 @@ create_GeneSet <- function(post, conf_data) {
 ##' @param conf_data  list, the configuration data as returned by the read_config_file function
 ##' @return SignedGeneSet object
 ##' @author Thomas Sandmann
+##' @importClassesFrom gCMAP SignedGeneSet
+##' @importMethodsFrom gCMAP geneSign SignedGeneSet
 create_SignedGeneSet <- function(post, conf_data){
   ## generate GeneIdentifierType object
   query.IdType <- create_GeneIdentifierType( post, conf_data=conf_data )
@@ -394,6 +404,7 @@ create_SignedGeneSet <- function(post, conf_data){
 ##'     \item original.ids, a character vector of the submitted ids corresponding to the returned EntrezIds
 ##'   }
 ##' @author Thomas Sandmann
+##' @importFrom GSEABase EntrezIdentifier
 convert_gene_identifiers <- function(gene.ids, query.IdType, species){
   ## convert gene symbols to Entrez Ids and return 
   ## translation table
@@ -424,7 +435,7 @@ convert_gene_identifiers <- function(gene.ids, query.IdType, species){
           )
 }
 
-## 'This function creates an ExpressionSet object from user-specified identifiers and scores.
+##' This function creates an ExpressionSet object from user-specified identifiers and scores.
 ##'
 ##' @title ExpressionSet creator
 ##' @param post  list, POST component of the Rook request
@@ -440,33 +451,62 @@ create_profile_ExpressionSet <- function( post, conf_data ){
     conversion <- list( translation.table=data.frame(EntrezId=post$query_data$EntrezId),
                         feedback=sprintf( "Your query contained %s unique Entrez identiers.", length(unique( post$query_data$EntrezId ))))
   } else if( post$idType == "probe") {
-    conversion <- .probe2entrez( as.character(post$query_data[,"Id"]), post$platform)
-    entrez.scores <- merge( conversion$translation.table, post$query_data, by.x="Probe", by.y="Id" )
+    conversion <- .probe2entrez(
+      as.character(post$query_data[,"Id"]),
+      post$platform)
+    entrez.scores <- merge(
+      conversion$translation.table,
+      post$query_data,
+      by.x="Probe",
+      by.y="Id" )
     entrez.scores <- entrez.scores[!is.na( entrez.scores$EntrezId),]
-    post$query_data <- data.frame( EntrezId=entrez.scores$EntrezId, Profile=entrez.scores$Profile)
+    post$query_data <- data.frame(
+      EntrezId=entrez.scores$EntrezId,
+      Profile=entrez.scores$Profile)
     
   } else if( post$idType == "symbol"){
     species <- conf_data$species[[post$species]][["annotation"]]
-    conversion <- .alias2entrez( as.character( post$query_data[,"Id"]), species)
-    entrez.scores <- merge( conversion$translation.table, post$query_data, by.x="Symbol", by.y="Id" )
+    conversion <- .alias2entrez(
+      as.character( post$query_data[,"Id"]),
+      species)
+    entrez.scores <- merge(
+      conversion$translation.table,
+      post$query_data,
+      by.x="Symbol",
+      by.y="Id" )
     entrez.scores <- entrez.scores[!is.na( entrez.scores$EntrezId),]
-    post$query_data <- data.frame( EntrezId=entrez.scores$EntrezId, Profile=entrez.scores$Profile)
+    post$query_data <- data.frame(
+      EntrezId=entrez.scores$EntrezId,
+      Profile=entrez.scores$Profile)
   }
   
   ## create score matrix, average scores for genes submitted with multiple scores
-  user.data <-tapply( post$query_data$Profile, 
-                      post$query_data$EntrezId, 
-                      mean, na.rm = TRUE)
-  user.data <- matrix(user.data, 
-                      ncol=1, 
-                      dimnames=list(names( user.data), "Profile"))
+  user.data <-tapply(
+    post$query_data$Profile, 
+    post$query_data$EntrezId, 
+    mean,
+    na.rm = TRUE)
+  user.data <- matrix(
+    user.data, 
+    ncol=1, 
+    dimnames=list(
+      names( user.data),
+      "Profile")
+    )
   
   ## create ExpressionSet
-  user.data <- ExpressionSet(user.data)
+  user.data <- ExpressionSet(
+    user.data
+    )
   
   ## add annotation to ExpressionSet  
   Biobase::annotation(user.data) <- "EntrezId"
-  return( list( gs=user.data, conversion=conversion ))
+  return(
+    list(
+      gs=user.data,
+      conversion=conversion
+      )
+    )
 }
 
 ##' This function leverages Bioconductor annotation packages to translate gene alias identifiers into Entrez identifiers
@@ -476,6 +516,7 @@ create_profile_ExpressionSet <- function( post, conf_data ){
 ##' @param universe character, the name of an annotation package (without .db)
 ##' @return a list with two elements: a data.frame with the original and translated identifiers and a character string summarizing the conversion process.
 ##' @author Thomas Sandmann
+##' @importMethodsFrom AnnotationDbi mget
 .alias2entrez <- function( gene.ids, universe) {
   ## load annotation package
   DB <- paste(universe,"db",sep=".")
@@ -497,9 +538,13 @@ create_profile_ExpressionSet <- function( post, conf_data ){
     stop("None of the query symbols could not be mapped to Entrez identifiers.", call. = FALSE)
   }
   
-  return( list( 
-    translation.table=data.frame( Symbol=gene.ids, EntrezId=entrez.ids ),
-    feedback=feedback))
+  return(
+    list( 
+      translation.table=data.frame(
+        Symbol=gene.ids,
+        EntrezId=entrez.ids ),
+      feedback=feedback)
+    )
 }
 
 ##' This function leverages Bioconductor annotation packages to translate microarray probe identifiers into Entrez identifiers
@@ -515,7 +560,9 @@ create_profile_ExpressionSet <- function( post, conf_data ){
   suppressPackageStartupMessages(require(DB,character.only=TRUE))
   
   ## construct environment name
-  s2e <- get( paste( universe, "ENTREZID", sep=""))
+  s2e <- get(
+    paste( universe, "ENTREZID", sep="")
+    )
   
   ## query environment for Entrez Ids
   entrez.ids <- AnnotationDbi::mget(gene.ids, s2e, ifnotfound=NA)
@@ -530,9 +577,15 @@ create_profile_ExpressionSet <- function( post, conf_data ){
     feedback <- "None of the query EntreIds is associated with gene symbols."
   }
   
-  return( list( 
-    translation.table=data.frame( Probe=gene.ids, EntrezId=entrez.ids ),
-    feedback=feedback))
+  return(
+    list( 
+      translation.table=data.frame(
+        Probe=gene.ids,
+        EntrezId=entrez.ids
+        ),
+    feedback=feedback
+      )
+    )
 }
 ##' This function leverages Bioconductor annotation packages to translate microarray entrez identifiers into gene symbols
 ##'
@@ -562,7 +615,13 @@ create_profile_ExpressionSet <- function( post, conf_data ){
     feedback("None of the query Entrez identifiers are associated with gene symbols.")
   }
   
-  return( list( 
-    translation.table=data.frame( EntrezId=gene.ids, Symbol=entrez.ids ),
-    feedback=feedback))
+  return(
+    list( 
+    translation.table=data.frame(
+      EntrezId=gene.ids,
+      Symbol=entrez.ids
+      ),
+    feedback=feedback
+      )
+    )
 }

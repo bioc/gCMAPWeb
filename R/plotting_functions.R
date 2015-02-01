@@ -18,27 +18,89 @@
 ##' @param down.label character, legend label for negative scores
 ##' @return None. Pdf and png versions of the overview file are written to file.
 ##' @author Thomas Sandmann
-create_overview_plot <- function( effect.sample, effect.population, file.name, reference.name, main="Distribution of similarity scores", xlab="Effect size", col.set="black", col.up="#1B9E77", col.down="blue",strip.cutoffs=c(-3,3), strip.bounds=c(-6,6),strip.col=c("#1B9E77","white","blue"), url.base=NULL, up.label="Correlated", down.label="Anti-correlated" ){
+##' @importFrom hwriter hwriteImage
+create_overview_plot <- function(
+  effect.sample,
+  effect.population,
+  file.name,
+  reference.name,
+  main="Distribution of similarity scores",
+  xlab="Effect size",
+  col.set="black",
+  col.up="#1B9E77",
+  col.down="blue",
+  strip.cutoffs=c(-3,3),
+  strip.bounds=c(-6,6),
+  strip.col=c("#1B9E77","white","blue"),
+  url.base=NULL,
+  up.label="Correlated",
+  down.label="Anti-correlated" ){
   
   ## export png
   png.file <- paste(file.name, "png", sep=".")
-  png(png.file, height=800, width=1000, res=200)
+  png(
+    png.file,
+    height=800,
+    width=1000,
+    res=200)
   
   plot.new()
   par(fig=c(0,0.9,0,1), new=TRUE)
-  .overview.density( effect.sample, effect.population, main=main, xlab=xlab, col.set=col.set, col.up=col.up, col.down=col.down, up.label=up.label, down.label=down.label)
-  par(fig=c(0.85,1,0,1),mar=c(5, 0, 4, 2) + 0.1, new=TRUE)
-  .overview.heatmap( effect.population, strip.cutoffs=strip.cutoffs, strip.bounds=strip.bounds, strip.col=strip.col )
+  .overview.density(
+    effect.sample,
+    effect.population,
+    main=main,
+    xlab=xlab,
+    col.set=col.set,
+    col.up=col.up,
+    col.down=col.down,
+    up.label=up.label,
+    down.label=down.label
+    )
+  par(
+    fig=c(0.85,1,0,1),
+    mar=c(5, 0, 4, 2) + 0.1,
+    new=TRUE)
+  .overview.heatmap(
+    effect.population,
+    strip.cutoffs=strip.cutoffs,
+    strip.bounds=strip.bounds,
+    strip.col=strip.col )
   
   dev.off()
   
   ifelse( is.null( url.base), 
-          hwriteImage( file.path(reference.name, "figures","overview.png"), 
-                       link=file.path(reference.name, "figures","overview.png"), 
-                       table=FALSE, br=TRUE, width=500),
-          hwriteImage( file.path(url.base, reference.name, "figures","overview.png"), 
-                       link=file.path(url.base, reference.name, "figures","overview.png"), 
-                       table=FALSE, br=TRUE, width=500) 
+          hwriteImage(
+            file.path(
+              reference.name,
+              "figures",
+              "overview.png"
+              ), 
+            link=file.path(
+              reference.name,
+              "figures",
+              "overview.png"
+              ), 
+            table=FALSE,
+            br=TRUE,
+            width=500
+            ),
+         hwriteImage(
+           file.path(
+             url.base,
+             reference.name,
+             "figures",
+             "overview.png"
+             ), 
+           link=file.path(
+             url.base,
+             reference.name,
+             "figures",
+             "overview.png"
+             ), 
+           table=FALSE,
+           br=TRUE,
+           width=500) 
   )
 }
 
@@ -56,27 +118,97 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
 ##' @param down.label character, legend label for negative scores
 ##' @return A density plot of score distributions
 ##' @author Thomas Sandmann
-.overview.density <- function(effect.sample, effect.population, main="Distribution of similarity scores", xlab="Effect size", col.set="black", col.up="#1B9E77", col.down="blue", up.label="Correlated instance", down.label="Anti-correlated instance"){
+.overview.density <- function(
+  effect.sample,
+  effect.population,
+  main="Distribution of similarity scores",
+  xlab="Effect size",
+  col.set="black",
+  col.up="#1B9E77",
+  col.down="blue",
+  up.label="Correlated instance",
+  down.label="Anti-correlated instance"){
   
-  population.density <- density( effect.population, na.rm =TRUE )
+  population.density <- density(
+    effect.population,
+    na.rm =TRUE
+    )
   
   ## plot densities
-  plot(population.density, col="lightgrey", lty=1, type="l", xlab=xlab, main=main, 
-       ylim=c( min( population.density$y), max( population.density$y, 0.4) )
+  plot(
+    population.density,
+    col="lightgrey",
+    lty=1,
+    type="l",
+    xlab=xlab,
+    main=main, 
+    ylim=c(
+      min(
+        population.density$y
+        ),
+      max(
+        population.density$y,
+        0.4)
+      )
   )
-  polygon( population.density, col="lightgrey", border=NA)
+  polygon(
+    population.density,
+    col="lightgrey",
+    border=NA
+    )
   ## add Gaussian
-  x=seq(min( population.density$x), max( population.density$x),length=200)
-  lines( x, 
-         y=dnorm(x,mean=0,sd=1),
-         type="l",lty=2,col="darkgrey")
+  x=seq(
+    min(
+      population.density$x
+      ),
+    max(
+      population.density$x
+      ),
+    length=200
+    )
+  lines(
+    x, 
+    y=dnorm(
+      x,
+      mean=0,
+      sd=1
+      ),
+    type="l",
+    lty=2,
+    col="darkgrey"
+    )
   
   ## add rug
-  rug( effect.sample[effect.sample <= 0], ticksize = 0.05, col=col.down, lwd=1)
-  rug( effect.sample[effect.sample > 0], ticksize = 0.05, col=col.up, lwd=1)
+  rug(
+    effect.sample[effect.sample <= 0],
+    ticksize = 0.05,
+    col=col.down,
+    lwd=1
+    )
+  rug(
+    effect.sample[effect.sample > 0],
+    ticksize = 0.05,
+    col=col.up,
+    lwd=1)
   
   ## add legend
-  legend("topright", c("All scores", up.label, down.label, "Normal distr."), col=c("lightgrey", col.up, col.down, "darkgrey"), lty=c(1,1,1,2), bg=NULL, cex=0.5)
+  legend("topright",
+         c(
+           "All scores",
+           up.label,
+           down.label,
+           "Normal distr."
+           ),
+         col=c(
+           "lightgrey",
+           col.up,
+           col.down,
+           "darkgrey"
+           ),
+         lty=c(1,1,1,2),
+         bg=NULL,
+         cex=0.5
+         )
 }
 
 ##'This function creates the heat-strip plot for the overview figure generated by create_overview_plot
@@ -89,20 +221,44 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
 ##' @param set.inf numeric, Inf or negative Inf values are set to this value for plotting
 ##' @return A heat-strip plot of the distribution
 ##' @author Thomas Sandmann
-.overview.heatmap <- function(effect.population,
-                              strip.cutoffs=c(-3,3),
-                              strip.bounds=c(-6,6),
-                              strip.col=c("#1B9E77","white","blue"),
-                              set.inf=20
-){
+.overview.heatmap <- function(
+  effect.population,
+  strip.cutoffs=c(-3,3),
+  strip.bounds=c(-6,6),
+  strip.col=c("#1B9E77","white","blue"),
+  set.inf=20
+  ){
   effect.population[is.infinite( effect.population )] <- set.inf * sign( effect.population[is.infinite( effect.population )] )
-  min.score <- min( strip.bounds[1], -max(abs(effect.population)))
-  max.score <- max( strip.bounds[2], max(abs(effect.population)))
-  breaks <- seq(min.score, max.score, length.out=256)
+  min.score <- min( strip.bounds[1],
+                   -max(abs(effect.population)))
+  max.score <- max( strip.bounds[2],
+                   max(abs(effect.population)))
+  breaks <- seq(min.score,
+                max.score,
+                length.out=256)
   breaks <- breaks[breaks < strip.cutoffs[1] | breaks > strip.cutoffs[2] ] ## blurr small scores
-  breaks <- c( min.score, breaks[ breaks > strip.bounds[1] & breaks < strip.bounds[2] ], max.score )  ## set scores with min/max colors
-  map.colors <- colorRampPalette(c(strip.col[3],strip.col[2],strip.col[1]))(length(breaks)-1)
-  image(matrix(sort( effect.population), nrow=1),main="", ylab="", xlab="", xaxt="n", yaxt="n", breaks=breaks, col=map.colors)
+  breaks <- c( min.score,
+              breaks[ breaks > strip.bounds[1] & breaks < strip.bounds[2] ],
+              max.score )  ## set scores with min/max colors
+  map.colors <- colorRampPalette(
+    c(
+      strip.col[3],
+      strip.col[2],
+      strip.col[1]
+      )
+    )(length(breaks)-1)
+  image(
+    matrix(
+      sort( effect.population),
+      nrow=1),
+    main="",
+    ylab="",
+    xlab="",
+    xaxt="n",
+    yaxt="n",
+    breaks=breaks,
+    col=map.colors
+    )
 }
 
 ##' This function creates a gene-set level plot indicating the scores of the enriched gene set and the background
@@ -127,16 +283,29 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
 ##' @param xlim numeric vector with the minimum / maximum limits of the x-axis. Default: c(-10,10)
 ##' @return None, plots are written to file.
 ##' @author Thomas Sandmann
-.gene_score_density <- function( gene.scores, background.scores,
-                                 id, figure.directory,
-                                 gene.signs=NULL, title=NULL,
-                                 col.set="black", col.up="#1B9E77", col.down="navy", 
-                                 col.unchanged="grey", set.densities=TRUE,
-                                 xlab="Differential expression score", jitter.points=0, pch="|",
-                                 xlim=c(-10,10) ){
-
+.gene_score_density <- function(
+  gene.scores,
+  background.scores,
+  id,
+  figure.directory,
+  gene.signs=NULL,
+  title=NULL,
+  col.set="black",
+  col.up="#1B9E77",
+  col.down="navy", 
+  col.unchanged="grey",
+  set.densities=TRUE,
+  xlab="Differential expression score",
+  jitter.points=0,
+  pch="|",
+  xlim=c(-10,10)
+  ){
+  
   ## ceate figure directory, if neccesary
-  dir.create(figure.directory, showWarnings=FALSE, recursive=TRUE)
+  dir.create(
+    figure.directory,
+    showWarnings=FALSE,
+    recursive=TRUE)
   
   ## introduce line breaks for very long set ids / names
   title <- strwrap( gsub("_", " ", title), width=45)
@@ -178,16 +347,46 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
   
   ##------ large plot
   png.filename <- paste("large", id, "png", sep=".")
-  png.file <- file.path(figure.directory, png.filename)
-  png(png.file, height=600, width=800, res=200)
-  .gene.set.density( s, title=title, up.color = col.up, down.color = col.down, xlab=xlab, jitter.points=jitter.points, pch=pch, set.densities=set.densities )     
+  png.file <- file.path(
+    figure.directory,
+    png.filename)
+  png(
+    png.file,
+    height=600,
+    width=800,
+    res=200)
+  .gene.set.density(
+    s,
+    title=title,
+    up.color = col.up,
+    down.color = col.down,
+    xlab=xlab,
+    jitter.points=jitter.points,
+    pch=pch,
+    set.densities=set.densities
+    )     
   dev.off()
   
   ##------ miniplot
   minipng.filename <- paste("mini", id ,"png", sep='.')
   minipng.file <- file.path(figure.directory, minipng.filename)
-  png(minipng.file, height=75, width=150, bg = "transparent")
-  .gene.set.density( s, mini=TRUE, up.color = col.up, down.color = col.down, xlab=xlab, jitter.points=0.1, pch=19, xlim=xlim, axes=FALSE, set.densities=set.densities )   
+  png(
+    minipng.file,
+    height=75,
+    width=150,
+    bg = "transparent")
+  .gene.set.density(
+    s,
+    mini=TRUE,
+    up.color = col.up,
+    down.color = col.down,
+    xlab=xlab,
+    jitter.points=0.1,
+    pch=19,
+    xlim=xlim,
+    axes=FALSE,
+    set.densities=set.densities
+    )   
   dev.off()
   
   return(TRUE)
@@ -213,7 +412,21 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
 ##' @param set.densities 
 ##' @return a density plot
 ##' @author Thomas Sandmann
-.gene.set.density <- function(s, up.color = "#1B9E77", down.color = "navy", title=NULL, xlab="Differential Expression Score", ylab="Density", xlim=NULL, ylim = NULL, pch="|", jitter.points=0, mini=FALSE, center=FALSE, axes=TRUE, set.densities=TRUE) {
+.gene.set.density <- function(
+  s,
+  up.color = "#1B9E77",
+  down.color = "navy",
+  title=NULL,
+  xlab="Differential Expression Score",
+  ylab="Density",
+  xlim=NULL,
+  ylim = NULL,
+  pch="|",
+  jitter.points=0,
+  mini=FALSE,
+  center=FALSE,
+  axes=TRUE,
+  set.densities=TRUE) {
   ## 's' is a list of three numerical vectors: 'main', 'up', 'down'
   dens <- lapply( s, function(x) if( length( x ) > 1 ){
     density( x, na.rm = TRUE)
@@ -232,7 +445,9 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
   }
   
   if( center == TRUE){
-    xlim <- c(-max(abs(xlim)), max(abs(xlim)))
+    xlim <- c(
+      -max(abs(xlim)),
+      max(abs(xlim)))
   }
   
   if ( is.null(ylim) ) {
@@ -249,22 +464,61 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
     dens[n ]= NA
   }
   
-  j = layout(matrix(c(1,2,3),3,1,byrow=TRUE), heights=c(0.90,0.05,0.05), widths=1)
+  j = layout(
+    matrix(c(1,2,3),3,1,
+           byrow=TRUE),
+    heights=c(0.90,0.05,0.05),
+    widths=1)
   if( mini == FALSE){
-    oldpar <- par(las=1, mar=c(0,2,2,2), oma=c(4,3,1.5,0.5))
+    oldpar <- par(
+      las=1,
+      mar=c(0,2,2,2),
+      oma=c(4,3,1.5,0.5))
   } else {
-    oldpar <- par(las=1, mar=c(0,0,0,0), oma=c(0,0,0,0))
+    oldpar <- par(
+      las=1,
+      mar=c(0,0,0,0),
+      oma=c(0,0,0,0))
   }
   
-  plot(dens$main$x, dens$main$y, xlim = xlim, ylim = ylim, col = "transparent", xaxt='n', main=title, ylab="", xlab="", axes=axes)
-  polygon(dens$main,col="grey90",border="grey90", ylab="")
+  plot(
+    dens$main$x,
+    dens$main$y,
+    xlim = xlim,
+    ylim = ylim,
+    col = "transparent",
+    xaxt='n',
+    main=title,
+    ylab="",
+    xlab="",
+    axes=axes)
+
+  polygon(
+    dens$main,
+    col="grey90",
+    border="grey90",
+    ylab="")
   
   if( set.densities == TRUE){
-    lines(dens$up, xlim = xlim, ylim = ylim, col = up.color, lwd = 1)
-    lines(dens$down, xlim = xlim, ylim = ylim, col = down.color, lwd = 1)
+    lines(
+      dens$up,
+      xlim = xlim,
+      ylim = ylim,
+      col = up.color,
+      lwd = 1)
+    lines(
+      dens$down,
+      xlim = xlim,
+      ylim = ylim,
+      col = down.color,
+      lwd = 1)
   }
   
-  abline(v=0, lwd = 1, lty = 2)
+  abline(
+    v=0,
+    lwd = 1,
+    lty = 2
+    )
   ##reset top margin so that there is no space between
   ##the second and third images
   if( mini == FALSE){
@@ -274,20 +528,60 @@ create_overview_plot <- function( effect.sample, effect.population, file.name, r
   }
   
   if( !is.null( s$down)){
-    stripchart(s$down, method="jitter", xaxt='n', axes = axes,
-               xlim = xlim, jitter = jitter.points, pch=pch, cex=1,
-               col = rgb(t(col2rgb(down.color)), alpha=100, maxColorValue=255))
-    abline(v=0, lwd =1, lty = 2)
+    stripchart(
+      s$down,
+      method="jitter",
+      xaxt='n',
+      axes = axes,
+      xlim = xlim,
+      jitter = jitter.points,
+      pch=pch,
+      cex=1,
+      col = rgb(
+        t(col2rgb(down.color)),
+        alpha=100,
+        maxColorValue=255)
+      )
+    abline(
+      v=0,
+      lwd =1,
+      lty = 2
+      )
   }
   if( !is.null( s$up)){
-    stripchart(s$up, method="jitter",  axes = axes,
-               xlim = xlim, jitter = jitter.points, pch=pch, cex=1,
-               col = rgb(t(col2rgb(up.color)), alpha=100, maxColorValue=255))
-    abline(v=0, lwd =1, lty = 2)
+    stripchart(
+      s$up,
+      method="jitter",
+      axes = axes,
+      xlim = xlim,
+      jitter = jitter.points,
+      pch=pch,
+      cex=1,
+      col = rgb(
+        t(col2rgb(up.color)),
+        alpha=100,
+        maxColorValue=255)
+      )
+    abline(
+      v=0,
+      lwd=1,
+      lty = 2
+      )
   }
-  mtext(xlab, side=1, outer=TRUE, padj=3.5, cex=0.75)
+  mtext(
+    xlab,
+    side=1,
+    outer=TRUE,
+    padj=3.5,
+    cex=0.75)
   par(las=0)
-  mtext(ylab, side=2, outer=TRUE, padj=-1, cex=0.75, srt=90)
+  mtext(
+    ylab,
+    side=2,
+    outer=TRUE,
+    padj=-1,
+    cex=0.75,
+    srt=90)
   par(oldpar)
 }
 

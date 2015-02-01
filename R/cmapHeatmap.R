@@ -123,7 +123,12 @@ cmapHeatmap <- function( x,
   
   ##----- plot  
   png.file <- paste(file.name, "png", sep=".")
-  png(png.file, height=plot.height, width=1000, res=200)
+  png(
+    png.file,
+    height=plot.height,
+    width=1000,
+    res=200
+    )
   .ImagePlot(x,
              ColorRamp=ColorRamp,
              col.col=col.col, 
@@ -134,35 +139,50 @@ cmapHeatmap <- function( x,
              row.anno=row.anno,
              row.dendrogram=row.dendrogram,
              image.fraction=image.fraction,
-             leaflab="none")
+             leaflab="none"
+             )
   dev.off()
   
-  png.file <- paste(file.name, "large.png", sep=".")
-  png(png.file, height=plot.height, width=1000, res=200, pointsize=7)
-  .ImagePlot(x,
-             ColorRamp=ColorRamp,
-             col.col=col.col, 
-             row.col=row.col,
-             ylab=ylab,
-             main=main,
-             col.anno=col.anno,
-             row.anno=row.anno,
-             row.dendrogram=row.dendrogram,
-             image.fraction=image.fraction,
-             leaflab="perpendicular")
+  png.file <- paste(
+    file.name,
+    "large.png",
+    sep="."
+    )
+  png(
+    png.file,
+    height=plot.height,
+    width=1000,
+    res=200,
+    pointsize=7)
+  .ImagePlot(
+    x,
+    ColorRamp=ColorRamp,
+    col.col=col.col, 
+    row.col=row.col,
+    ylab=ylab,
+    main=main,
+    col.anno=col.anno,
+    row.anno=row.anno,
+    row.dendrogram=row.dendrogram,
+    image.fraction=image.fraction,
+    leaflab="perpendicular")
   dev.off()
   
-  image.html <- ifelse( is.null( url.base), 
-                        hwriteImage( file.path(reference.name, "figures", "heatmap.png"),
-                                     link=file.path(reference.name, "figures","heatmap.large.png"),
-                                     table=FALSE, br=TRUE, width=500),
-                        hwriteImage( file.path(url.base, reference.name, "figures","heatmap.png"), 
-                                     link=file.path(reference.name, "figures","heatmap.large.png"),
-                                     table=FALSE, br=TRUE, width=500) 
-  )
-  return( list( image.html = image.html,
-                branches = branches )
-          )
+  image.html <- ifelse(
+    is.null( url.base), 
+    hwriteImage( file.path(reference.name, "figures", "heatmap.png"),
+                link=file.path(reference.name, "figures","heatmap.large.png"),
+                table=FALSE, br=TRUE, width=500),
+    hwriteImage( file.path(url.base, reference.name, "figures","heatmap.png"), 
+                link=file.path(reference.name, "figures","heatmap.large.png"),
+                table=FALSE, br=TRUE, width=500) 
+    )
+  return(
+    list(
+      image.html = image.html,
+      branches = branches
+      )
+    )
 }
 
 ##############
@@ -183,30 +203,33 @@ cmapHeatmap <- function( x,
 ##' @param image.fraction numeric, number between 0 and 1 determining the default fraction of the plot occupied by the heatmap.
 ##' @return A plot output to the default graphics device
 ##' @author Thomas Sandmann
-.ImagePlot <- function(x, 
-                       ColorRamp=colorRampPalette(c("#044381FF", "grey95",
-                                                    "grey95", "firebrick"))(100),
-                       col.col=c(down="black", 
-                                 up="grey"), 
-                       row.col=c(correlated="#1B9E77", 
-                                 anticorrelated="#044381FF",
-                                 over="#1B9E77",
-                                 under="#044381FF"),
-                       main="Query gene scores",
-                       col.anno=NULL,
-                       row.anno=NULL,
-                       row.dendrogram=NULL,
-                       ylab="Significant datasets",
-                       image.fraction=0.8,
-                       leaflab="perpendicular" # either none or perpendicular
-){
+.ImagePlot <- function(
+  x, 
+  ColorRamp=colorRampPalette(c("#044381FF", "grey95",
+    "grey95", "firebrick"))(100),
+  col.col=c(down="black", 
+    up="grey"), 
+  row.col=c(correlated="#1B9E77", 
+    anticorrelated="#044381FF",
+    over="#1B9E77",
+    under="#044381FF"),
+  main="Query gene scores",
+  col.anno=NULL,
+  row.anno=NULL,
+  row.dendrogram=NULL,
+  ylab="Significant datasets",
+  image.fraction=0.8,
+  leaflab="perpendicular" # either none or perpendicular
+  ){
   
   ## suppress y-axis label for small numbers of rows
   if( nrow( x < 10)){
     ylab=""
   }
   
-  ColorLevels <- seq(min(x, na.rm=TRUE), max(x, na.rm=TRUE), length=length(ColorRamp)+1)
+  ColorLevels <- seq(min(x, na.rm=TRUE),
+                     max(x, na.rm=TRUE),
+                     length=length(ColorRamp)+1)
   
   ## layout the plot
   par(oma=c(1.5,3,5,3))  
@@ -245,52 +268,78 @@ cmapHeatmap <- function( x,
     if( leaflab != "none"){
       par(mar = c(1.4,0,0,3))
     }
-    plot( as.dendrogram( row.dendrogram ), horiz=TRUE, 
-          axes=FALSE, leaflab=leaflab)
+    plot(
+      as.dendrogram(
+        row.dendrogram
+        ),
+      horiz=TRUE, 
+      axes=FALSE,
+      leaflab=leaflab)
   } else {
     frame()
   }
   
   ##--------- Frame 5: heatmap
   par(mar = c(1.4,0.5,0.1,0.05))
-  na.grey <- matrix(NA, ncol=ncol(x), nrow=nrow(x))
+  na.grey <- matrix(NA,
+                    ncol=ncol(x),
+                    nrow=nrow(x)
+                    )
   na.grey[ is.na(x)] <- 1
   
   ## first plot NA positions in grey
-  image(1:ncol(x),
-        1:nrow(x),
-        t(na.grey),
-        col="grey",
-        zlim=c(1,1),
-        axes=FALSE,
-        xlab="",
-        ylab=""
-  )
+  image(
+    1:ncol(x),
+    1:nrow(x),
+    t(na.grey),
+    col="grey",
+    zlim=c(1,1),
+    axes=FALSE,
+    xlab="",
+    ylab=""
+    )
   
   ## next overplot real values
-  image(1:ncol(x),
-        1:nrow(x),
-        t(x),
-        axes=FALSE,
-        col=ColorRamp, 
-        zlim=c(min(x),max(x)),
-        breaks=ColorLevels,
-        ylab=ylab,
-        add=TRUE)
+  image(
+    1:ncol(x),
+    1:nrow(x),
+    t(x),
+    axes=FALSE,
+    col=ColorRamp, 
+    zlim=c(min(x),max(x)),
+    breaks=ColorLevels,
+    ylab=ylab,
+    add=TRUE)
   box(lwd=1)
-  mtext(main, side = 3, line = 1.2, adj=0.6, outer = TRUE, 
-        font=par()$font.main, cex=par()$cex.main)
-  mtext(ylab, side = 4, line = 0.1, outer = TRUE, las=3, adj=0.75, cex=0.9)
+  mtext(main,
+        side = 3,
+        line = 1.2,
+        adj=0.6,
+        outer = TRUE, 
+        font=par()$font.main,
+        cex=par()$cex.main)
+  mtext(
+    ylab,
+    side = 4,
+    line = 0.1,
+    outer = TRUE,
+    las=3,
+    adj=0.75,
+    cex=0.9
+    )
   
   ##--------- Frame 6: row annotation bar
   if( !is.null( row.anno )){
     par(mar = c(1.4,0.05,0.1,0.5))
-    image( matrix( as.integer( factor( row.anno ) ), nrow=1),
-           col=row.col[ levels(factor( row.anno ))],
-           axes=FALSE
-    )
+    image(
+      matrix( as.integer( factor( row.anno ) ), nrow=1),
+      col=row.col[ levels(factor( row.anno ))],
+      axes=FALSE
+      )
   } else {
-    par(mar = c(0.5,0.05,0.05,0.5))
+    par(
+      mar = c(0.5,0.05,0.05,0.5)
+      )
     frame()
   }
   
@@ -303,40 +352,67 @@ cmapHeatmap <- function( x,
   if( leaflab != "none"){
     par(mar = c(3.5,1,4,1))
   }
-  image(ColorLevels, 1,
-        matrix(data=ColorLevels, nrow=length(ColorLevels),ncol=1),
-        col=ColorRamp,
-        xlab="",ylab="",
-        yaxt="n",
-        cex=0.5,
-        mgp = c(3, 0.5, 0))
+  image(
+    ColorLevels,
+    1,
+    matrix(
+      data=ColorLevels,
+      nrow=length(ColorLevels),
+      ncol=1
+      ),
+    col=ColorRamp,
+    xlab="",ylab="",
+    yaxt="n",
+    cex=0.5,
+    mgp = c(3, 0.5, 0))
   mtext("Gene-level z-score",side = 3,las=1,cex=0.6,line=0.35)  
   
   ##--------- Frame 9: column legend
   if( !is.null( col.anno )){
-    par(mar = c(0,1,0.5,0), las=1, cex=1, xpd=NA)
+    par(
+      mar = c(0,1,0.5,0),
+      las=1,
+      cex=1,
+      xpd=NA)
     frame()
-    legend("right", cex=0.6, title="Query gene direction",
-           lty=c(1,1), lwd=3,
-           legend=unique( levels(factor( col.anno ))), 
-           col=c(col.col)[as.character(
-             unique(levels(factor( col.anno ))))], 
-           horiz=FALSE,
-           bty="n")
+    legend(
+      "right",
+      cex=0.6,
+      title="Query gene direction",
+      lty=c(1,1), lwd=3,
+      legend=unique(
+        levels(
+          factor( col.anno )
+          )
+        ), 
+      col=c(col.col)[as.character(
+        unique(levels(
+          factor( col.anno )
+          )
+               )
+        )], 
+      horiz=FALSE,
+      bty="n")
   } else {
-    par(mar = c(0,1,0.5,0), las=1, cex=1, xpd=NA)
+    par(
+      mar = c(0,1,0.5,0),
+      las=1,
+      cex=1,
+      xpd=NA)
     frame()
   }
   ##--------- Frame 10: row legend
   if( !is.null( row.anno )){
     par(mar = c(0,1,0.5,0), las=1, cex=1, xpd=NA)
     frame()
-    legend("right", cex=0.6, 
-           title="Set direction",
-           legend=levels(factor( row.anno )),
-           fill=row.col[ levels(factor( row.anno ))], 
-           horiz=FALSE,
-           bty="n", border=FALSE)    
+    legend(
+      "right",
+      cex=0.6, 
+      title="Set direction",
+      legend=levels(factor( row.anno )),
+      fill=row.col[ levels(factor( row.anno ))], 
+      horiz=FALSE,
+      bty="n", border=FALSE)    
   } else { 
     par(mar = c(0,1,0.5,1), las=1, cex=1, xpd=NA)
     frame()

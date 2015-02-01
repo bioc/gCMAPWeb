@@ -205,6 +205,7 @@ html_body_last <- function(url.base=NULL){
 ##' @param message character, optional message to display above the result table
 ##' @return character, name of the output html file
 ##' @author Thomas Sandmann
+##' @importFrom brew brew
 conversion_html <- function( df, result.dir, file.name, tmp_filename, 
                              url.base=NULL, message=NULL
                             ){
@@ -359,6 +360,8 @@ platform_radio_html <- function( conf_data ){
 ##' @param reference.cmaps list containing all reference cmaps as eSet-like objects (e.g. NChannelSet, CMAPCollection)
 ##' @return Html code as character string.
 ##' @author Thomas Sandmann
+##' @importMethodsFrom gCMAP signed
+##' @importClassesFrom gCMAP CMAPCollection
 reference_radio_html <- function( conf_data, reference.cmaps ){
   all.cmaps <- lapply( conf_data$species, "[[", "cmaps")
   for( species.name in names( all.cmaps )){
@@ -446,7 +449,6 @@ single_input_example <- function(){
 ##' signed.input.example.down (down-regulated gene identifiers)
 ##' @return Character string with html code
 ##' @author Thomas Sandmann
-
 signed_input_example <- function(){
   signed.input.example.popover <- getOption("signed.input.example.popover", default="Example data with human Entrez identifiers")
   
@@ -526,7 +528,10 @@ create_figure_legend <- function( reference.name ){
 ##' @param text Character, text for the legend of the density plot the main report page. Can be set as the global variabel "gene.set.legend".
 ##' @return Character
 ##' @author Thomas Sandmann
-create_overview_legend <- function( text=getOption( "gene.set.legend", default=sprintf("<strong>Gene-set scores</strong><br><strong>Left: </strong>Distribution of similarity scores between your query and all instances in the selected reference database. For reference, a standard normal distribution is indicated as a dotted line. The (up to) top %s scores for significantly correlated (green) or anti-correlated (blue) instances are indicated in the rug.<br><strong>Right: </strong>A heatmap of the rank-ordered similarity scores.", getOption( "max.results", default=50))) ){
+create_overview_legend <- function( text ){
+  if( missing(text)){
+    text =getOption( "gene.set.legend", default=sprintf("<strong>Gene-set scores</strong><br><strong>Left: </strong>Distribution of similarity scores between your query and all instances in the selected reference database. For reference, a standard normal distribution is indicated as a dotted line. The (up to) top %s scores for significantly correlated (green) or anti-correlated (blue) instances are indicated in the rug.<br><strong>Right: </strong>A heatmap of the rank-ordered similarity scores.", getOption( "max.results", default=50)))
+  }
   sprintf("<p align='justify'><small>%s</small><br></p>", text)
 }
 
@@ -536,7 +541,11 @@ create_overview_legend <- function( text=getOption( "gene.set.legend", default=s
 ##' @param text Character, text for the legend of the density plot the main report page. Can be set as the global variabel "gene.set.legend".
 ##' @return Character
 ##' @author Thomas Sandmann
-create_heatmap_legend <- function( text=getOption( "heatmap.legend", default="<strong>Gene scores</strong><br><strong>Center: </strong>Heatmap of query gene scores (columns) in the reported reference datasets (rows), colored according to differential expression score. <strong>Left: </strong>Dendrogram from hierarchically clustering the reference datsets (rows) according to the query gene scores (only shown if 3 or more sets were reported). <strong>Top: </strong> query gene direction (black for up, grey for down-regulated query genes), only available for directional queries. <strong>Right: </strong>Direction of similarity (correlated, green or anti-correlated, blue). Click to enlarge.")){
+create_heatmap_legend <- function(text){
+  if( missing( text )){
+    text=getOption( "heatmap.legend",
+    default="<strong>Gene scores</strong><br><strong>Center: </strong>Heatmap of query gene scores (columns) in the reported reference datasets (rows), colored according to differential expression score. <strong>Left: </strong>Dendrogram from hierarchically clustering the reference datsets (rows) according to the query gene scores (only shown if 3 or more sets were reported). <strong>Top: </strong> query gene direction (black for up, grey for down-regulated query genes), only available for directional queries. <strong>Right: </strong>Direction of similarity (correlated, green or anti-correlated, blue). Click to enlarge.")
+  }
   sprintf("<p align='justify'><small>%s</small><br></p>", text)
 }
 
@@ -545,7 +554,10 @@ create_heatmap_legend <- function( text=getOption( "heatmap.legend", default="<s
 ##' @param text Character, text for the legend of the density plot on gene-level reports for non-directional and directional queries. Can be set as the global variabel "gene.density.legend".
 ##' @return Character string with html code
 ##' @author Thomas Sandmann
-gene_density_chart_legend <- function(text=getOption( "gene.density.legend", default="<strong>Top: </strong>The grey density shows the differential expression scores for all genes in this reference dataset, up-regulated genes have high scores, down-regulated genes have low scores and unchanged genes have scores around zero. If you submitted a signed query, the distribution of scores for your up-regulated genes are shown in green, and for those you labeled down-regulated in blue. Otherwise, a single distribution for all query genes is shown in black.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a single query gene, following the same color scheme as in the density plot above.")){
+gene_density_chart_legend <- function(text){
+  if(missing(text)){
+    text=getOption( "gene.density.legend", default="<strong>Top: </strong>The grey density shows the differential expression scores for all genes in this reference dataset, up-regulated genes have high scores, down-regulated genes have low scores and unchanged genes have scores around zero. If you submitted a signed query, the distribution of scores for your up-regulated genes are shown in green, and for those you labeled down-regulated in blue. Otherwise, a single distribution for all query genes is shown in black.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a single query gene, following the same color scheme as in the density plot above.")
+  }
   sprintf("<p align='justify'><small>%s</small><br><br></p>", text) 
 }
 
@@ -554,16 +566,23 @@ gene_density_chart_legend <- function(text=getOption( "gene.density.legend", def
 ##' @param text Character, text for the legend of the pie chart on gene-level reports for non-directional queries. Can be set as the global variabel "gene.pie.legend".
 ##' @return Character string with html code
 ##' @author Thomas Sandmann
-gene_pie_chart_legend <- function(  text=getOption( "gene.pie.legend", default="This pie chart shows how many of your query genes are also annotated in this reference dataset. The reported FDR and effect sizes were calculated using Fisher's exact test and reflect the likelihood of observing the overlap (grey) between your query and the reference gene sets, taking into account the size of the reference set and the total number of genes in the database.")){
+gene_pie_chart_legend <- function(  text ){
+
+  if(missing(text)){
+    text=getOption( "gene.pie.legend", default="This pie chart shows how many of your query genes are also annotated in this reference dataset. The reported FDR and effect sizes were calculated using Fisher's exact test and reflect the likelihood of observing the overlap (grey) between your query and the reference gene sets, taking into account the size of the reference set and the total number of genes in the database.")
+  }
   sprintf("<p align='justify'><small>%s</small><br><br></p>", text)   
 }
 
 ##' Html code for the legend of the density charts of the gene-level reports from Profile queries
 ##'
 ##' @param text Character, text for the legend of the density plot on gene-level reports for profile queries. Can be set as the global variabel "gene.profile.legend".
-##' @return Character string with html code
+#' @return Character string with html code
 ##' @author Thomas Sandmann
-gene_density_profile_legend <- function( text=getOption( "gene.profile.legend", default="<strong>Top: </strong>The grey density displays the distribution of all <strong>differential expression scores in the query</strong> you submitted. The colored line(s) highlight where the genes annotated as differentially expressed in the reference experiment fall in your query distribution.<br>Scores for genes annotated as up-regulated in the reference experiment are shown in green, those annotated as down-regulated in the reference dataset are shown in blue.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a gene in the reference dataset, following the same color scheme as in the density plot above.")){
+gene_density_profile_legend <- function( text ){
+  if(missing(text)){
+    text=getOption( "gene.profile.legend", default="<strong>Top: </strong>The grey density displays the distribution of all <strong>differential expression scores in the query</strong> you submitted. The colored line(s) highlight where the genes annotated as differentially expressed in the reference experiment fall in your query distribution.<br>Scores for genes annotated as up-regulated in the reference experiment are shown in green, those annotated as down-regulated in the reference dataset are shown in blue.<br><strong>Bottom: </strong>Each dash at the bottom of the plot corresponds to a gene in the reference dataset, following the same color scheme as in the density plot above.")
+  }
   sprintf("<p align='justify'><small>%s</small><br><br></p>", text)   
 }
 
@@ -662,7 +681,10 @@ index_title <- function(text=getOption( "index.main", default="gConnectivity Map
 ##' @param text Character, subtitle of the hero unit on the index.rhtml page. Can be set as the global variabel "index.sub".
 ##' @return Character string with html code
 ##' @author Thomas Sandmann
-index_subtitle <- function(text=getOption( "index.sub", default="a search engine for differential gene expression profiles.")){
+index_subtitle <- function(text){
+  if(missing(text)){
+    text=getOption( "index.sub", default="a search engine for differential gene expression profiles.")
+  }
   cat(sprintf("<h3>%s</h3>", text))
 }
 
@@ -671,7 +693,11 @@ index_subtitle <- function(text=getOption( "index.sub", default="a search engine
 ##' @param text Character, text of the hero unit on the index.rhtml page. Can be set as the global variabel "index.text".
 ##' @return Character string with html code
 ##' @author Thomas Sandmann
-index_text <- function(text=getOption( "index.text", default="Compare your favorite genes to a reference database of differential expression experiments")){
+index_text <- function(text){
+  if( missing( text )){
+    text <- getOption( "index.text",
+              default="Compare your favorite genes to a reference database of differential expression experiments")
+  }
   if(! is.null( text)){
     cat(sprintf("<p>%s</p>", text))
   }
@@ -682,7 +708,10 @@ index_text <- function(text=getOption( "index.text", default="Compare your favor
 ##' @param text Character, text for the additional message on the index page (warning box)
 ##' @return text Character string with html code
 ##' @author Thomas Sandmann
-index_message <- function(text=getOption( "index.message", default=NULL)){
+index_message <- function(text){
+  if(missing( text )){
+    text <- getOption( "index.message", default=NULL)
+  }
   if(! is.null( text)){
     cat( sprintf("<div class='alert alert-info span8'>%s</div>", text))
   }
@@ -693,7 +722,10 @@ index_message <- function(text=getOption( "index.message", default=NULL)){
 ##' @return Character string with html code
 ##' @param text, Character, the content of the blockquote field on the index.rhtml page. Can be set as the global variabel "index.quote".
 ##' @author Thomas Sandmann
-index_quote <- function(text=getOption( "index.quote", default="<p>What if at least some parts of [ the laborious screening of genetic or chemical libraries ] could be systematized and centralized? <br>And hits found and hypotheses generated with something resembling an internet search engine? <br>These are the questions the Connectivity Map project set out to answer.</p><small>Justin Lamb in <cite title='Source Title'>Nature Reviews Cancer 7, 54-60 (January 2007)</cite></small></blockquote>")){
+index_quote <- function(text){
+  if(missing(text)){
+    text=getOption( "index.quote", default="<p>What if at least some parts of [ the laborious screening of genetic or chemical libraries ] could be systematized and centralized? <br>And hits found and hypotheses generated with something resembling an internet search engine? <br>These are the questions the Connectivity Map project set out to answer.</p><small>Justin Lamb in <cite title='Source Title'>Nature Reviews Cancer 7, 54-60 (January 2007)</cite></small></blockquote>")
+  }
   
   if( !is.na( text )){
     cat( sprintf( "<div class='span12'><blockquote>%s</blockquote></div>", text))

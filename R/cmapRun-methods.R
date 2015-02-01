@@ -64,6 +64,7 @@ setMethod(
 
 ##----- Set vs. Set comparison with fisher_score
 
+#' @param keep.scores Scalar boolean, include scores in the result object ?
 #' @rdname cmapRun-methods
 #' @aliases cmapRun,CMAPCollection,CMAPCollection-method
 setMethod(
@@ -138,7 +139,8 @@ setMethod(
 )
 
 ##--------- eSet Profile vs. eSet comparison with gsealm_jg_score
-
+#' @importClassesFrom gCMAP CMAPCollection CMAPResults
+#' @importMethodsFrom gCMAP gsealm_jg_score
 #' @rdname cmapRun-methods
 #' @aliases cmapRun,eSet,CMAPCollection-method
 setMethod(
@@ -155,21 +157,31 @@ setMethod(
 )
 
 #' @rdname cmapRun-methods
+#' @importMethodsFrom gCMAP induceCMAPCollection setSizes
 #' @aliases cmapRun,eSet,eSet-method
 setMethod(
   "cmapRun",
   signature( user.input="eSet", cmap= "eSet" ),
-  function( user.input, cmap, lower=getOption( "lower.threshold", default=-3), higher=getOption( "higher.threshold", default=3), element=getOption( "element", default="z")) {
+  function( user.input,
+           cmap,
+           lower=getOption( "lower.threshold", default=-3),
+           higher=getOption( "higher.threshold", default=3),
+           element=getOption( "element", default="z")) {
     
     ## two-class comparisons are not supported, yet
     stopifnot( ncol(user.input) == 1)
     
     ## induce signed sets from the reference datasets
-    cmap.collection <- induceCMAPCollection( cmap, lower=lower, higher=higher, element=element )
+    cmap.collection <- induceCMAPCollection(
+      cmap,
+      lower=lower,
+      higher=higher,
+      element=element )
     cmap.collection <- cmap.collection[, setSizes(cmap.collection)$n.total != 0 ] ## remove empty sets
     if( ncol(cmap.collection) == 0){
       stop("None of the genes in the reference dataset passed the score cutoff to induce gene sets.")
     }
-    cmapRun(user.input, cmap.collection)
+    cmapRun(user.input,
+            cmap.collection)
   }
 )

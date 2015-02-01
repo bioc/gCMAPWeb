@@ -7,8 +7,16 @@
 ##' @param element character, identifying the elementName of the channel extracted from NChannelSet objects
 ##' @param save.intermediates logical, if TRUE rdata files of intermediate results will be stored in the temporary directory for debugging
 ##' @return a list with three elements: conversion, reports and tmp_filename
+##' @importFrom parallel mclapply
 ##' @author Thomas Sandmann
-cmapAnalysis <- function( req, conf_data, reference.cmaps, element=getOption( "element", default="z"), save.intermediates=getOption( "save.intermediates", default=FALSE)){
+cmapAnalysis <- function(
+  req,
+  conf_data,
+  reference.cmaps,
+  element=getOption( "element",
+    default="z"),
+  save.intermediates=getOption( "save.intermediates",
+    default=FALSE)){
   
   ## validate & parse post request
   if( getOption( "save.intermediates", default = FALSE) == TRUE){
@@ -45,26 +53,83 @@ cmapAnalysis <- function( req, conf_data, reference.cmaps, element=getOption( "e
   
   ## create output directory for this query
   tmp_filename <- basename( tempfile ())  
-  dir.create(file.path( tempdir(), "results", tmp_filename), showWarnings=FALSE, recursive=TRUE)
+  dir.create(
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename
+      ),
+    showWarnings=FALSE,
+    recursive=TRUE)
   ## copy js, css, etc
-  file.copy(system.file(file.path("htdocs","css"), package="gCMAPWeb"), file.path( tempdir(), "results", tmp_filename), recursive=TRUE)
-  file.copy(system.file(file.path("htdocs","js"), package="gCMAPWeb"), file.path( tempdir(), "results", tmp_filename), recursive=TRUE)
-  file.copy(system.file(file.path("htdocs","img"), package="gCMAPWeb"), file.path( tempdir(), "results", tmp_filename), recursive=TRUE)
-  file.copy(system.file(file.path("htdocs","favicon.ico"), package="gCMAPWeb"), file.path( tempdir(), "results", tmp_filename))
-  file.copy(system.file(file.path("htdocs","help.html"), package="gCMAPWeb"), file.path( tempdir(), "results", tmp_filename), recursive=TRUE)
+  file.copy(
+    system.file(
+      file.path("htdocs","css"),
+      package="gCMAPWeb"),
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename
+      ),
+    recursive=TRUE)
+  file.copy(
+    system.file(
+      file.path("htdocs","js"),
+      package="gCMAPWeb"),
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename),
+    recursive=TRUE)
+  file.copy(
+    system.file(
+      file.path("htdocs","img"),
+      package="gCMAPWeb"),
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename),
+    recursive=TRUE)
+  file.copy(
+    system.file(
+      file.path("htdocs","favicon.ico"),
+      package="gCMAPWeb"),
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename))
+  file.copy(
+    system.file(
+      file.path("htdocs","help.html"),
+      package="gCMAPWeb"),
+    file.path(
+      tempdir(),
+      "results",
+      tmp_filename),
+    recursive=TRUE)
   
   ## save results as rdata object
   session.info <- sessionInfo()
-  save(results, session.info, file=file.path(tempdir(), "results", tmp_filename,"results.rdata"))
+  save(
+    results,
+    session.info,
+    file=file.path(
+      tempdir(),
+      "results",
+      tmp_filename,
+      "results.rdata"
+      )
+    )
   
   ## for symbol or probe queries, return identifier conversion table
   if( !is.null( conversion)){
-    conversion$html<- conversion_html( df=conversion$translation.table, 
-                     message=conversion$feedback,
-                     file.name="identifier_conversion",
-                     tmp_filename=tmp_filename,
-                     result.dir = file.path( tempdir(), "results", tmp_filename)
-                     )
+    conversion$html<- conversion_html(
+      df=conversion$translation.table, 
+      message=conversion$feedback,
+      file.name="identifier_conversion",
+      tmp_filename=tmp_filename,
+      result.dir = file.path( tempdir(), "results", tmp_filename)
+      )
   } else {
     conversion <- NULL
   }
@@ -84,20 +149,36 @@ cmapAnalysis <- function( req, conf_data, reference.cmaps, element=getOption( "e
         
     } else {
       ## create reports for successful analyses
-      annotation.db=paste( conf_data[["species"]][[post$species]][["annotation"]], "db", sep=".")
-      report <- generate_report( results[[n]], query, tmp_filename=tmp_filename,
-                                 reference.name=names(results)[n],
-                                 reference=reference.cmaps[[names(results)[n]]],
-                                 element=element,
-                                 annotation.db=annotation.db)
+      annotation.db=paste(
+        conf_data[["species"]][[post$species]][["annotation"]],
+        "db",
+        sep=".")
+      report <- generate_report(
+        results[[n]], query, tmp_filename=tmp_filename,
+        reference.name=names(results)[n],
+        reference=reference.cmaps[[names(results)[n]]],
+        element=element,
+        annotation.db=annotation.db)
     }
   })
   names( reports) <- names( results )
   
   ## save reports for debugging purposes
   if( getOption( "save.intermediates", default = FALSE) == TRUE){ 
-      save(reports, conversion, file=file.path(tempdir(),"reports.rdata"))
+    save(reports,
+         conversion,
+         file=file.path(
+           tempdir(),
+           "reports.rdata"
+           )
+         )
   }
   
-  return( list( conversion=conversion, reports=reports, tmp_filename=tmp_filename ) )
+  return(
+    list(
+      conversion=conversion,
+      reports=reports,
+      tmp_filename=tmp_filename
+      )
+    )
 }

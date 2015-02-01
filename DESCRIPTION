@@ -1,7 +1,7 @@
 Package: gCMAPWeb
 Type: Package
 Title: A web interface for gene-set enrichment analyses
-Version: 1.7.0
+Version: 1.7.1
 Author: Thomas Sandmann
 Maintainer: Thomas Sandmann <sandmann.thomas@gene.com>
 Description: The gCMAPWeb R package provides a graphical user interface
@@ -31,15 +31,43 @@ Description: The gCMAPWeb R package provides a graphical user interface
         datasets will be identified and reported in graphical and
         tabular form.
 License: Artistic-2.0
-Depends: brew, gCMAP (>= 1.3.0), R (>= 2.15.0), yaml, Rook
-Imports: Biobase, annotate, AnnotationDbi, BiocGenerics, brew,
-        graphics, grDevices, GSEABase, hwriter, IRanges, methods,
-        parallel, stats, utils
-Suggests: org.Hs.eg.db, org.Mm.eg.db, ArrayExpress, affy, hgfocus.db,
-        ArrayExpress, hgu133a.db, mgug4104a.db, RUnit
-Enhances: bigmemory, bigmemoryExtras
+Depends: 
+    Biobase,
+    gCMAP (>= 1.3.0), 
+    methods,
+    R (>= 2.15.0), 
+    Rook
+Imports: 
+    brew,
+    BiocGenerics,
+    annotate, 
+    AnnotationDbi,
+    grDevices, 
+    GSEABase, 
+    hwriter,
+    parallel,
+    yaml
+Suggests: 
+    affy, 
+    ArrayExpress, 
+    hgfocus.db,
+    hgu133a.db, 
+    mgug4104a.db, 
+    org.Hs.eg.db, 
+    org.Mm.eg.db, 
+    RUnit
+Enhances: 
+    bigmemory, 
+    bigmemoryExtras
+biocViews: 
+    GUI, 
+    GeneSetEnrichment, 
+    Visualization, 
+    Transcription, 
+    Microarray, 
+    GeneExpression, 
+    DifferentialExpression
 LazyLoad: yes
-Packaged: 2013-03-17 18:59:51 UTC; sandmat1
 Collate: 'gCMAPWeb-package.R' 'AllGenerics.R' 'cmapRun-methods.R'
         'cmap.R' 'cmapAnalysis.R' 'cmapHeatmap.R' 'createObject.R'
         'example_objects.R' 'file_io.R' 'html_elements.R'

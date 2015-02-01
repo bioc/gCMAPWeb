@@ -28,7 +28,8 @@
 ##' 
 ##' @docType methods
 ##' @rdname cmapRun-methods
-
+##' @import methods
+##' @importMethodsFrom gCMAP fisher_score minSetSize trend
 setGeneric(
   "cmapRun",
   def = function( user.input, cmap, ...) standardGeneric( "cmapRun" )

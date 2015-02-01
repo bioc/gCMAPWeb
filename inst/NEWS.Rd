@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.7.1}{
+  \itemize{
+  \item{BUGFIX}{Updated roxygen tags and specified imports in a more
+  granular fashion.}
+}
+}
+
 \section{Changes in version 1.3.2}{
   \itemize{
   \item{BUGFIX}{Moved the 'Rook' package from 'Imports' to 'Depends'}

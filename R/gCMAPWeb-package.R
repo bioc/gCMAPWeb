@@ -8,6 +8,11 @@
 ##' }
 ##' A web interace is populated based on a configuration file in YAML format and additional information from the reference dataset objects (if available).
 ##' For each query, a report is generated in html format, including graphs and tabular output. Extensive customization of the graphical user interface can easily be performed through global options.
+##' @import Biobase
+##' @import BiocGenerics
+##' @import Rook
+##' @import methods
+##' @import grDevices
 ##' @name gCMAPWeb-package
 ##' @docType package
 ##' @title A web-interface for gene-set enrichment analysis

@@ -20,15 +20,19 @@
 ##'                                 package = "gCMAPWeb" )
 ##' )
 ##'}
-gCMAPWeb <- function( config.file.path=system.file("config", "config.yml", package="gCMAPWeb"), 
-                         url.root=system.file("htdocs", package="gCMAPWeb")){
+gCMAPWeb <- function(
+  config.file.path=system.file("config", "config.yml", package="gCMAPWeb"), 
+  url.root=system.file("htdocs", package="gCMAPWeb")){
   
   ##----- read & validate config file, load specified reference datasets
   conf_data <- validate_config_file( config.file.path )
   reference.cmaps <- load_cmaps( conf_data )
   
   ## create per-session temp dir, if necessary
-  dir.create(file.path(tempdir(),'results'), showWarnings=FALSE)
+  dir.create(
+    file.path(tempdir(),'results'),
+    showWarnings=FALSE
+    )
   
   ## create gCMAP app
   gcmap <- Builder$new(

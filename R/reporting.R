@@ -20,19 +20,44 @@
 ##' @param swap.colnames list, containing alternative names for CMAPResults columns.
 ##' @return a list of character strings, either containing html code snippets or paths to result files. These elements are used to brew the final result html page.
 ##' @author Thomas Sandmann
-generate_report <- function( cmap.result, reference, reference.name, annotation.db,
-                             element, query, tmp_filename, title="", 
-                             max.results=getOption( "max.results", default=50),
-                             min.found = getOption( "min.found", default=1), 
-                             max.padj = getOption( "max.padj", default=0.1), 
-                             gene.level.report=getOption( "gene.level.report", default=TRUE), 
-                             gene.level.plot=getOption( "gene.level.plot", default=TRUE),
-                             reportDirectory=tempdir(),
-                             excluded.cols=getOption( "excluded.cols", 
-                                                      default=c("geneScores", "signed", "pval", "UID", 
-                                                                "z.shift", "log_fc.shift", "mod_fc.shift")),
-                             swap.colnames=getOption( "swap.colnames", default=list(padj="FDR", nFound="Genes"))
-                             ){
+##' @importMethodsFrom gCMAP effect nFound padj cmapTable
+##' @importFrom hwriter hwrite
+generate_report <- function(
+  cmap.result,
+  reference,
+  reference.name,
+  annotation.db,
+  element,
+  query,
+  tmp_filename,
+  title="", 
+  max.results=getOption(
+    "max.results",
+    default=50),
+  min.found = getOption(
+    "min.found",
+    default=1), 
+  max.padj = getOption(
+    "max.padj",
+    default=0.1), 
+  gene.level.report=getOption(
+    "gene.level.report",
+    default=TRUE), 
+  gene.level.plot=getOption(
+    "gene.level.plot",
+    default=TRUE),
+  reportDirectory=tempdir(),
+  excluded.cols=getOption(
+    "excluded.cols", 
+    default=c("geneScores", "signed", "pval", "UID", 
+      "z.shift", "log_fc.shift", "mod_fc.shift")),
+  swap.colnames=getOption(
+    "swap.colnames",
+    default=list(
+      padj="FDR",
+      nFound="Genes")
+    )
+  ){
   
   ##--------- adjust parameters for single-gene queries
   if( inherits( query, "character")){
@@ -87,14 +112,15 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
     } else {
       
       ## overview density plot
-      overview.html <- create_overview_plot( effect.sample=na.omit(effect( cmap.result )[1:min( nrow(cmap.result),max.results)]), 
-                                             effect.population=na.omit(effect.population), 
-                                             file.name=file.path( figure.dir, "overview"), 
-                                             reference.name=reference.name,
-                                             main=overview.main, 
-                                             xlab=varMetadata(cmap.result)["effect",], 
-                                             url.base=NULL, up.label=up.label, 
-                                             down.label=down.label)
+      overview.html <- create_overview_plot(
+        effect.sample=na.omit(effect( cmap.result )[1:min( nrow(cmap.result),max.results)]), 
+        effect.population=na.omit(effect.population), 
+        file.name=file.path( figure.dir, "overview"), 
+        reference.name=reference.name,
+        main=overview.main, 
+        xlab=varMetadata(cmap.result)["effect",], 
+        url.base=NULL, up.label=up.label, 
+        down.label=down.label)
       
       overview.legend.html <- create_overview_legend()
       
@@ -102,13 +128,19 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
       top.results <- cmapTable( cmap.result )
       
       ## tab-delimited file
-      selected.columns <- setdiff( colnames( top.results), excluded.cols) 
-      tab.html <- create_tab( top.results[,selected.columns], 
-                              result.dir, file.name="report.tab", url.base=reference.name)
+      selected.columns <- setdiff(
+        colnames( top.results),
+        excluded.cols) 
+      tab.html <- create_tab(
+        top.results[,selected.columns], 
+        result.dir,
+        file.name="report.tab",
+        url.base=reference.name)
       
-      zip.html <- hwrite("Download complete report as zip archive",
-                         link=file.path( "..", paste(tmp_filename, "zip", sep=".")),
-                         br=TRUE)
+      zip.html <- hwrite(
+        "Download complete report as zip archive",
+        link=file.path( "..", paste(tmp_filename, "zip", sep=".")),
+        br=TRUE)
       
       heatmap.html <- NULL
       heatmap.legend.html <- NULL
@@ -116,17 +148,24 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
       col.anno <- NULL
       ##------  gene-level reports
       if(gene.level.report ==TRUE){
-        gene.level.reports  <- create_gene_report( cmap.result, query, 
-                                                   url.base=reference.name,
-                                                   result.dir=file.path(result.dir, "gene_reports"), 
-                                                   figure.dir=figure.dir,
-                                                   annotation.db=annotation.db,
-                                                   reference.cmap=reference,
-                                                   element=element)
+        gene.level.reports  <- create_gene_report(
+          cmap.result,
+          query, 
+          url.base=reference.name,
+          result.dir=file.path(result.dir, "gene_reports"), 
+          figure.dir=figure.dir,
+          annotation.db=annotation.db,
+          reference.cmap=reference,
+          element=element)
         
         ## save intermediate files
         if( getOption( "save.intermediates", default=FALSE) == TRUE){
-          save( gene.level.reports, file=file.path(tempdir(),"gene_level_reports.rdata"))
+          save(
+            gene.level.reports,
+            file=file.path(
+              tempdir(),
+              "gene_level_reports.rdata")
+            )
         }
 
         ## gene.level.reports contains three elements: 
@@ -163,7 +202,15 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
             file.name=file.path( figure.dir, "heatmap")
 
             if( getOption( "save.intermediates", default=FALSE) == TRUE){
-              save( scores, col.anno, row.anno, reference.name, file=file.path(tempdir(),"heatmap_data.rdata"))
+              save(
+                scores,
+                col.anno,
+                row.anno,
+                reference.name,
+                file=file.path(
+                  tempdir(),
+                  "heatmap_data.rdata")
+                )
             }
             
             if( !is.null(scores) 
@@ -271,11 +318,28 @@ generate_report <- function( cmap.result, reference, reference.name, annotation.
 ##' @param gene.level.plot, logical: should gene-level plots be included in the report ?
 ##' @return character string with the relative url to the report html, which is directly written to disk.
 ##' @author Thomas Sandmann
-create_gene_report<-function (cmap.result, query, result.dir, url.base, reference.cmap, 
-                              figure.dir, element = getOption("element", default = "z"), 
-                              annotation.db = "org.Hs.eg.db", 
-                              gene.level.plot = getOption("gene.level.plot", default = TRUE)
-                              ) {
+##' @importMethodsFrom gCMAP nFound set geneSign geneScores cmapTable nSet
+##' @importClassesFrom gCMAP CMAPResults CMAPCollection
+##' @importClassesFrom GSEABase GeneSet
+##' @importMethodsFrom GSEABase geneIds
+##' @importFrom hwriter hwriteImage
+create_gene_report<-function(
+  cmap.result,
+  query,
+  result.dir,
+  url.base,
+  reference.cmap, 
+  figure.dir,
+  element = getOption(
+    "element",
+    default = "z"
+    ), 
+  annotation.db = "org.Hs.eg.db", 
+  gene.level.plot = getOption(
+    "gene.level.plot",
+    default = TRUE
+    )
+  ) {
   if (!inherits(cmap.result, "CMAPResults")) {
     stop("create_gene_report: cmap.result is not a CMAPResults object")
   }
@@ -285,15 +349,23 @@ create_gene_report<-function (cmap.result, query, result.dir, url.base, referenc
   if (any(nFound(cmap.result) == 0)) {
     stop("CMAPResults object contains sets with nFound = 0")
   }
-  dir.create(result.dir, showWarnings = FALSE, recursive = TRUE)
-  gene.report.url <- lapply(1:nrow(cmap.result), function(i) {
-    gene.sign <- gene.score <- score.table <- gene.set.members <- NA
-    set.name <- as.character(set(cmap.result[i, ]))
-    
+  dir.create(
+    result.dir,
+    showWarnings = FALSE,
+    recursive = TRUE
+    )
+  gene.report.url <- lapply(
+    1:nrow(cmap.result),
+    function(i) {
+      gene.sign <- gene.score <- score.table <- gene.set.members <- NA
+      set.name <- as.character(set(cmap.result[i, ]))
+      
     ## directional query
-    if (inherits(query, "SignedGeneSet")) {
-      gene.ids <- geneIds(query)
-      gene.sign <- as.character(geneSign(query))
+      if (inherits(query, "SignedGeneSet")) {
+        gene.ids <- geneIds(query)
+        gene.sign <- as.character(
+          geneSign(query)
+          )
       if (!inherits(reference.cmap, "CMAPCollection")) {
         if (inherits(reference.cmap, "eSet")) {
           gene.ids.found <- which(gene.ids %in% featureNames(reference.cmap))
@@ -307,8 +379,6 @@ create_gene_report<-function (cmap.result, query, result.dir, url.base, referenc
           row.names( score.table ) <- featureNames( reference.cmap)
           background.scores <- score.table[, element] 
           gene.scores[gene.ids.found] <- background.scores[gene.ids[gene.ids.found]]
-          #          background.scores <- assayDataElement(reference.cmap, 
-          #                                                element)[, set.name]
           score.table <- score.table[gene.ids[gene.ids.found],,drop=FALSE]
           gene.legend <- gene_density_chart_legend()
           gene.table.title <- "Results for your query genes"
@@ -438,15 +508,6 @@ create_gene_report<-function (cmap.result, query, result.dir, url.base, referenc
         cat( legend.text )
       }
     }
-    #     cat( "<span class='label label-info pull-left' data-toggle='collapse' data-target='#figure_legend'>",
-#          "Table legend</span>",
-#          "<div class='span12'></div>",
-#          "<div id='figure_legend' class='collapse span12'>",
-#          sep="\n") 
-#     cat( "<div class='span12'>")
-#     cat( legend.text, "<br>", sep="\n")
-#     cat("<br></div>")      
-#     cat( "</div>")
     
     cat(html.table, sep = "\n")
     cat(tab.html)
@@ -478,12 +539,31 @@ create_gene_report<-function (cmap.result, query, result.dir, url.base, referenc
 ##' @param file.name character, name of the report file
 ##' @return character string with the html code pointing to the download URL
 ##' @author Thomas Sandmann
-create_tab <- function( df, result.dir, url.base=NULL, file.name){
-  write.table(df, file=file.path( result.dir, file.name), quote=FALSE, sep="\t", row.names=FALSE)
-  link <- ifelse( is.null(url.base), file.name, file.path( url.base, file.name))
-  tab.html <- hwrite("Download above results as tab-delimited text file",
-                     link=link,
-                     br=TRUE)
+##' @importFrom hwriter hwrite
+create_tab <- function(
+  df,
+  result.dir,
+  url.base=NULL,
+  file.name
+  ){
+  write.table(
+    df,
+    file=file.path( result.dir, file.name),
+    quote=FALSE,
+    sep="\t",
+    row.names=FALSE)
+  link <- ifelse(
+    is.null(url.base),
+    file.name,
+    file.path(
+      url.base,
+      file.name
+      )
+    )
+  tab.html <- hwrite(
+    "Download above results as tab-delimited text file",
+    link=link,
+    br=TRUE)
   return( tab.html )
 }
 ##'  This function exports the complete report in a zip file
@@ -497,7 +577,11 @@ create_zip <- function(tmp_filename, out.dir){
   try({
     curr.wd <- getwd()
     setwd(out.dir)
-    system( sprintf("zip -r9X %s %s",tmp_filename, tmp_filename), ignore.stdout =TRUE)
+    system(
+      sprintf("zip -r9X %s %s",
+              tmp_filename,
+              tmp_filename),
+      ignore.stdout =TRUE)
     setwd( curr.wd )},
       silent=TRUE
   )
@@ -513,7 +597,18 @@ create_zip <- function(tmp_filename, out.dir){
 ##' @param swap.colnames list, containing alternative names for CMAPResults columns.
 ##' @return Data frame with href html tags in the target column(s)
 ##' @author Thomas Sandmann
-addLinks <- function(df, pattern=".url$", swap.colnames=getOption( "swap.colnames", default=list(padj="FDR", nFound="Genes"))){
+##' @importFrom hwriter hwrite
+addLinks <- function(
+  df,
+  pattern=".url$",
+  swap.colnames=getOption(
+    "swap.colnames",
+    default=list(
+      padj="FDR",
+      nFound="Genes"
+      )
+    )
+  ){
   ## make sure the original column.names are considered
   for( term in swap.colnames){
     if( term %in% colnames( df )){
@@ -559,10 +654,15 @@ addLinks <- function(df, pattern=".url$", swap.colnames=getOption( "swap.colname
 ##' @param annotation.db character, name of the annotation package to use for lookup
 ##' @return data.frame with entrez, symbol and name columns
 ##' @author Thomas Sandmann
+##' @importMethodsFrom AnnotationDbi mget
+##' @importFrom annotate getAnnMap
 retrieve_annotation <-function(entrez, annotation.db){
   symbol <- unlist(AnnotationDbi::mget(entrez, getAnnMap("SYMBOL", annotation.db), ifnotfound=NA))
   name <- unlist(AnnotationDbi::mget(entrez, getAnnMap("GENENAME", annotation.db), ifnotfound=NA))
-  converted.ids <- data.frame(entrez=entrez, symbol=symbol, name=name)
+  converted.ids <- data.frame(
+    entrez=entrez,
+    symbol=symbol,
+    name=name)
   return(converted.ids)
 }
 
@@ -572,6 +672,7 @@ retrieve_annotation <-function(entrez, annotation.db){
 ##' @param cmap.result CMAPResults object
 ##' @return A data.frame with gene-level scores in column 'Scores'
 ##' @author Thomas Sandmann
+##' @importMethodsFrom gCMAP geneScores cmapTable 
 add_geneScores_to_df <- function(cmap.result){
   results.raw <- cmapTable( cmap.result)
   if( !is.null( geneScores( cmap.result ) ) ){
@@ -593,9 +694,12 @@ add_geneScores_to_df <- function(cmap.result){
 ##' @param swap.colnames  list, containing alternative names for CMAPResults columns.
 ##' @return character string with the html code element required to insert the legend into the html report
 ##' @author Thomas Sandmann
-create_legend <- function( res, reference.name, 
+create_legend <- function( res,
+                          reference.name, 
                            keep=c("set", "trend", "FDR", "effect", "nSet","Genes"), 
-                           swap.colnames=getOption( "swap.colnames", default=list(padj="FDR", nFound="Genes")) ){
+                           swap.colnames=getOption(
+                             "swap.colnames",
+                             default=list(padj="FDR", nFound="Genes")) ){
   df <- varMetadata( res )
   
   ## remove rows without additional annotation

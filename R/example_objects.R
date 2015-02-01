@@ -12,6 +12,7 @@
 ##' @return NChannelSet with simulated scores.
 ##' @export
 ##' @author Thomas Sandmann
+##' @importMethodsFrom AnnotationDbi keys
 ##' @examples
 ##' ## generate example NChannelSet with 100 features and 10 columns
 ##' ## for human EntrezIds
@@ -24,7 +25,14 @@
 ##'   s <- exampleCMAP( universe="org.Hs.eg.db", idType="SYMBOL")
 ##'   head( featureNames( s ))
 ##'   }
-exampleCMAP <- function( universe="org.Hs.eg.db", idType="ENTREZID", rows=1000, cols=20, seed=123, add=3) {
+exampleCMAP <- function(
+  universe="org.Hs.eg.db",
+  idType="ENTREZID",
+  rows=1000,
+  cols=20,
+  seed=123,
+  add=3
+  ){
   ## check parameters
   universe <- ifelse( grepl(".db$", universe), universe, paste(universe, "db", sep="."))
   annotation.loaded <- try( get( universe ))
@@ -46,8 +54,21 @@ exampleCMAP <- function( universe="org.Hs.eg.db", idType="ENTREZID", rows=1000, 
   set.seed( seed )
   channels <- c("z", "log_fc")
   g.ids <- sample( identifiers, rows, replace=FALSE)
-  dat <- lapply(channels, function(x){
-    s <- matrix( rnorm( rows * cols), nrow=rows, ncol=cols, dimnames=list( g.ids, paste("Exp",1:cols, sep="")))
+  dat <- lapply(
+    channels,
+    function(x){
+    s <- matrix(
+      rnorm( rows * cols),
+      nrow=rows,
+      ncol=cols,
+      dimnames=list(
+        g.ids,
+        paste("Exp",
+              1:cols,
+              sep=""
+              )
+        )
+      )
     s[1:50, 1] <- s[1:50, 1] + add
     s[51:100, 1] <- s[51:100, 1] - add
     s
@@ -59,7 +80,10 @@ exampleCMAP <- function( universe="org.Hs.eg.db", idType="ENTREZID", rows=1000, 
   )
   
   annotation( obj) <- sub( ".db$", "", universe)
-  pData( obj ) <- data.frame( Name=sampleNames(obj), row.names=sampleNames(obj) )
+  pData( obj ) <- data.frame(
+    Name=sampleNames(obj),
+    row.names=sampleNames(obj)
+    )
   return( obj )
 }
 

@@ -1,6 +1,11 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.7.2}{
+  \itemize{
+  \item{BUGFIX}{Removed redundant Rd file.}
+}
+}
 \section{Changes in version 1.7.1}{
   \itemize{
   \item{BUGFIX}{Updated roxygen tags and specified imports in a more

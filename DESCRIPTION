@@ -1,9 +1,9 @@
 Package: gCMAPWeb
 Type: Package
 Title: A web interface for gene-set enrichment analyses
-Version: 1.13.0
+Version: 1.13.1
 Author: Thomas Sandmann
-Maintainer: Thomas Sandmann <sandmann.thomas@gene.com>
+Maintainer: Thomas Sandmann <sandmann.t@gmail.com>
 Description: The gCMAPWeb R package provides a graphical user interface
         for the gCMAP package. gCMAPWeb uses the Rook package and can
         be used either on a local machine, leveraging R's internal web
@@ -30,6 +30,8 @@ Description: The gCMAPWeb R package provides a graphical user interface
         For each query submission, significantly similar reference
         datasets will be identified and reported in graphical and
         tabular form.
+Note: gCMAPWeb is not compatible with the RStudio IDE, but can be used
+  from the command line or via R's standard GUI.
 License: Artistic-2.0
 Depends: 
     Biobase,

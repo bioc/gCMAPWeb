@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.13.1}{
+  \itemize{
+  \item{UPDATE}{Added note about incompatibility with RStudio.}
+}
+}
+
 \section{Changes in version 1.7.2}{
   \itemize{
   \item{BUGFIX}{Removed redundant Rd file.}

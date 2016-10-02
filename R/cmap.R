@@ -9,16 +9,16 @@
 ##' @export
 ##' @author Thomas Sandmann
 ##' @examples
-##' \dontrun{
-##' ## start a gCMAPWeb instance with the example data and
-##' ## configuration provided in the package
-##' gCMAPWeb()
-##' ## same as above, explicitely specifying the location
-##' ## of the configuration file
-##' gCMAPWeb( 
-##' config.file.path = system.file("config", "config.yml", 
-##'                                 package = "gCMAPWeb" )
-##' )
+##' if (interactive()) {
+##'   ## start a gCMAPWeb instance with the example data and
+##'   ## configuration provided in the package
+##'   gCMAPWeb()
+##'   ## same as above, explicitely specifying the location
+##'   ## of the configuration file
+##'   gCMAPWeb( 
+##'     config.file.path = system.file("config", "config.yml", 
+##'                                     package = "gCMAPWeb" )
+##'   )
 ##'}
 gCMAPWeb <- function(
   config.file.path=system.file("config", "config.yml", package="gCMAPWeb"), 

@@ -252,12 +252,12 @@ load_cmaps <- function(
   })
   
   for( n in 1:length( cmaps.all ) ){
-    ## attach all BigMatrix assayDataElements
-    if( !suppressWarnings(require("bigmemoryExtras", quietly=TRUE, character.only=TRUE))){
-      attachAssayDataElements <- NA # to suppress R CMD check warnings
-    } else {
-      attachAssayDataElements( assayData( cmaps.all[[n]] ))
-    }
+    ## BigMatrix assayDataElements are deprecated and this code will be removed
+    # if( !suppressWarnings(require("bigmemoryExtras", quietly=TRUE, character.only=TRUE))){
+    #   attachAssayDataElements <- NA # to suppress R CMD check warnings
+    # } else {
+    #   attachAssayDataElements( assayData( cmaps.all[[n]] ))
+    # }
     if( inherits( cmaps.all[[n]], "CMAPCollection")){
       cmaps.all[[n]] <-minSetSize( cmaps.all[[n]], min.members=min.set.size)
     }

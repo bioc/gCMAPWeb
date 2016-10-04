@@ -19,6 +19,9 @@
 ##' @return None. Pdf and png versions of the overview file are written to file.
 ##' @author Thomas Sandmann
 ##' @importFrom hwriter hwriteImage
+##' @importFrom graphics abline box frame layout legend lines mtext par pie plot.new polygon rug stripchart title plot
+##' @importFrom stats as.dendrogram dist dnorm hclust median na.omit p.adjust pnorm rnorm setNames
+##' @importFrom utils URLdecode installed.packages read.delim sessionInfo write.table
 create_overview_plot <- function(
   effect.sample,
   effect.population,

@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.13.3}{
+  \itemize{
+  \item{BUGFIX}{Updated NAMESPACE by adding imports recommended by R CMD check.}
+}
+}
+
 \section{Changes in version 1.13.1}{
   \itemize{
   \item{UPDATE}{Added note about incompatibility with RStudio.}

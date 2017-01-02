@@ -1,0 +1,19 @@
+citEntry(
+  entry="article",
+  title = "gCMAP: user-friendly connectivity mapping with R.",
+  author = personList(as.person("Thomas Sandmann"),
+                      as.person("Sarah K. Kummerfeld"),
+                      as.person("Robert Gentleman"),
+                      as.person("Richard Bourgon")),
+  year = 2014,
+  journal = "Bioinformatics",
+  doi = "10.1093/bioinformatics/btt592",
+  volume = 30,
+  issue = 1,
+  textVersion =
+    paste(
+      "Thomas Sandmann, Sarah K. Kummerfeld, Robert Gentleman,",
+      "Richard Bourgon (2014):",
+      "gCMAP: user-friendly connectivity mapping with R.",
+      "Bioinformatics")
+)

@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{NEWS file for the gCMAPWeb package}
 
+\section{Changes in version 1.27.1}{
+\itemize{
+\item{CHANGE: }{The gCMAP and gCMAPWeb packages are deprecated and will
+be removed from Bioconductor version 3.12.}
+}
+}
+
 \section{Changes in version 1.15.1}{
   \itemize{
   \item{NEW: }{Added citation information.}
